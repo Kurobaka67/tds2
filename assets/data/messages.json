@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "content": "Bonjour",
+    "userId": 1,
+    "groupId": 1
+  },
+  {
+    "id": 2,
+      "content": "Salut à toi",
+    "userId": 2,
+    "groupId": 1
+  },
+  {
+    "id": 3,
+    "content": "Ca va ?",
+    "userId": 1,
+    "groupId": 1
+  },
+  {
+    "id": 4,
+    "content": "Coucou tout le monde",
+    "userId": 2,
+    "groupId": 2
+  }
+]
