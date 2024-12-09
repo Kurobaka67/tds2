@@ -12,25 +12,25 @@ class UserModel {
     required this.firstname,
     required this.lastname,
     required this.email,
-    required this.isAdmin
+    required this.role
   });
 
   String firstname;
   String lastname;
   String email;
-  bool isAdmin;
+  String role;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     firstname: json["firstname"],
     lastname: json["lastname"],
     email: json["email"],
-    isAdmin: json["isAdmin"],
+    role: json["role"],
   );
 
   Map<String, dynamic> toJson() => {
     "firstname": firstname,
     "lastname": lastname,
     "email": email,
-    "isAdmin": isAdmin,
+    "role": role,
   };
 }

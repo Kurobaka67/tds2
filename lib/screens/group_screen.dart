@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/widgets/widgets.dart';
 
 import '../models/user_model.dart';
+import '../services/groups_services.dart';
 
 class GroupScreen extends StatefulWidget {
   const GroupScreen({super.key});
@@ -12,14 +14,27 @@ class GroupScreen extends StatefulWidget {
 }
 
 class _GroupScreenState extends State<GroupScreen> {
+  bool isLoading = false;
   late List<GroupModel>? groups = [
-    GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", isAdmin: false)),
-    GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", isAdmin: false))
+    GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client'), archived: false),
+    GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client'), archived: false)
   ];
+  List<GroupModel>? groups2;
+
+  Future<void> initGroup() async {
+    setState(() {
+      isLoading = true;
+    });
+    groups2 = (await GroupService().getGroupsByUser(1));
+    setState(() {
+      isLoading = true;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    initGroup();
   }
 
   @override
@@ -45,24 +60,30 @@ class _GroupScreenState extends State<GroupScreen> {
         },
         child: const Icon(Icons.group_add),
       ),
-      drawer: TopBarDrawer(title: "Groupes",groups: groups , user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", isAdmin: false)),
+      drawer: (groups2!= null)?TopBarDrawer(title: "Groupes",groups: groups2 , user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')):TopBarDrawer(title: "Groupes", user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             const TopBarMenu(),
-            SizedBox(
-              height: 200,
-              child: ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(
-                    color: Colors.black,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                  itemCount: groups!.length,
-                  itemBuilder: (context, index) => GroupItem(group: groups![index])
+            if(groups2!=null)
+              SizedBox(
+                height: 200,
+                child: ListView.separated(
+                    separatorBuilder: (context, index) => const Divider(
+                      color: Colors.black,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    itemCount: groups2!.length,
+                    itemBuilder: (context, index) => GroupItem(group: groups2![index])
+                ),
+              )
+            else
+              LoadingAnimationWidget.fourRotatingDots(
+                size: 50,
+                color: Colors.black45,
               ),
-            ),
           ],
         ),
       ),

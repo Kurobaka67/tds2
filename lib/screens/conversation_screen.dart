@@ -12,7 +12,7 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   List<UserModel> contacts = [
-    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", isAdmin: false)
+    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client')
   ];
   late UserModel? contactValue = null;
 
@@ -53,7 +53,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ),
         ],
       ),
-      drawer: TopBarDrawer(title: "Contact", users: contacts, user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", isAdmin: false)),
+      drawer: TopBarDrawer(title: "Contact", users: contacts, user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
       body: const Column(
         children: [
           TopBarMenu(),

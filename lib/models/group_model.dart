@@ -11,19 +11,23 @@ String groupModelToJson(List<GroupModel> data) =>
 class GroupModel {
   GroupModel({
     required this.name,
-    required this.moderator
+    required this.moderator,
+    required this.archived
   });
 
   String name;
   UserModel moderator;
+  bool archived;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
     name: json["name"],
-    moderator: json["moderator"],
+    moderator: UserModel(firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"]),
+    archived: json["archived"],
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "moderator": moderator,
+    "archived": archived,
   };
 }
