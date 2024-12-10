@@ -53,7 +53,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ),
         ],
       ),
-      drawer: TopBarDrawer(title: "Contact", users: contacts, user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
+      drawer: TopBarDrawer(title: "Contact", users: contacts),
       body: const Column(
         children: [
           TopBarMenu(),

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/notification_model.dart';
 import '../models/user_model.dart';
 
 class TopBarDrawer extends StatefulWidget {
   final String title;
-  final UserModel user;
   final List<UserModel>? users;
   final List<GroupModel>? groups;
 
   const TopBarDrawer({
     super.key,
     required this.title,
-    required this.user,
     this.users,
     this.groups
   });
@@ -22,7 +21,25 @@ class TopBarDrawer extends StatefulWidget {
 }
 
 class _TopBarDrawerState extends State<TopBarDrawer> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   List<NotificationModel> notifications = [];
+  String firstname = "";
+  String lastname = "";
+
+  Future<void> initializeSharedPreferences() async {
+    final String fn = await prefs?.getString('firstname') ?? '';
+    final String ln = await prefs?.getString('lastname') ?? '';
+    setState(() {
+      firstname = fn;
+      lastname = ln;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeSharedPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +93,7 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                         children: [
                           Flexible(
                               child: Text(
-                                  widget.user.firstname,
+                                  firstname,
                                   style: TextStyle(
                                       color: theme.colorScheme.onPrimary
                                   ),
@@ -85,7 +102,7 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                           ),
                           Flexible(
                               child: Text(
-                                  widget.user.lastname,
+                                  lastname,
                                   style: TextStyle(
                                       color: theme.colorScheme.onPrimary
                                   ),

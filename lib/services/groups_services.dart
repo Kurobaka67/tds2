@@ -28,10 +28,10 @@ class GroupService {
     return null;
   }
 
-  Future<List<GroupModel>?> getGroupsByUser(int userId) async {
+  Future<List<GroupModel>?> getGroupsByUser(String userEmail) async {
     try {
       var client = http.Client();
-      var uri = Uri.parse('${globals.url}/groups/user/$userId');
+      var uri = Uri.parse('${globals.url}/groups/user/$userEmail');
       var response = await client.get(uri);
       if (response.statusCode == 200) {
         return groupModelFromJson(const Utf8Decoder().convert(response.bodyBytes));

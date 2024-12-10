@@ -51,7 +51,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
         ],
         title: Center(child: Text(widget.group.name)),
       ),
-      drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users, user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
+      drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users),
       body: SingleChildScrollView(
         child: Column(
           children: [

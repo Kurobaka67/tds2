@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      drawer: TopBarDrawer(title: "", user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
+      drawer: const TopBarDrawer(title: ""),
       body: const Column(
         children: [
           TopBarMenu(),

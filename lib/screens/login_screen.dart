@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/screens/signin_screen.dart';
 import 'package:tds2/widgets/login_form.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   //SharedPreferencesAsync? prefs = SharedPreferencesAsync();
 
   Future<void> initializeSharedPreferences() async {
@@ -69,10 +70,56 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const Center(
                         child: LoginForm()
-                    )
+                    ),
+                    const SizedBox(height: 20),
+                    Stack(
+                      children: [
+                        Divider(
+                          endIndent: 30,
+                          indent: 30,
+                          thickness: 2,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        Center(
+                            child: Container(
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                    color: Color(0xFFD1E4FF)
+                                ),
+                                child: const Center(child: Text('OU', style: TextStyle(fontSize: 18)))
+                            )
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                        onPressed: () {
+                            _navigateToSigninScreen(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.secondary,
+                          fixedSize: Size(240, 50),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Créer un compte',
+                              style: TextStyle(
+                                color: theme.colorScheme.onSecondary,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
                   ],
                 )),
           ))
     ]);
+  }
+
+  void _navigateToSigninScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const SigninScreen()));
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/models/user_model.dart';
+import 'package:tds2/screens/home_screen.dart';
 
 import '../logger.dart';
 import '../services/users_services.dart';
@@ -12,6 +16,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   FocusNode myFocusNode = FocusNode();
@@ -19,6 +24,11 @@ class _LoginFormState extends State<LoginForm> {
 
   String email = '';
   String password = '';
+
+  void _navigateToHomeScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const HomeScreen()));
+  }
 
   Future<void> loginUser() async {
     setState(() {
@@ -29,12 +39,16 @@ class _LoginFormState extends State<LoginForm> {
       password = passwordController.text;
       isLoading = false;
     });
-    Widget? screen = (await UsersService().login(email, password));
+    List<UserModel>? result = (await UsersService().login(email, password));
 
     emailController.clear();
     passwordController.clear();
-    if(screen != null) {
-      //goToScreen(screen);
+    if(result != null) {
+      await prefs?.setString('email', result[0].email);
+      await prefs?.setString('firstname', result[0].firstname);
+      await prefs?.setString('lastname', result[0].lastname);
+      await prefs?.setString('role', result[0].role);
+      _navigateToHomeScreen(context);
     }
   }
 
@@ -58,6 +72,8 @@ class _LoginFormState extends State<LoginForm> {
                 keyboardType: TextInputType.emailAddress,
                 autofillHints: const <String>[AutofillHints.email],
                 controller: emailController,
+                validator:
+                  EmailValidator(errorText: 'Veuillez entrer un email').call,
                 style: TextStyle(
                   color: theme.colorScheme.onSurface,
                   fontSize: 20,
@@ -85,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                   prefixIcon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Icon(
-                      Icons.account_circle_rounded,
+                      Icons.mail_outline,
                       color: theme.colorScheme.onSurface,
                       size: 30,
                     ),
@@ -160,7 +176,6 @@ class _LoginFormState extends State<LoginForm> {
                   if (loginFormKey.currentState!.validate()) {
                     loginUser();
                     logger.i('Connexion');
-                    //_navigateToNextScreen(context);
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -171,51 +186,6 @@ class _LoginFormState extends State<LoginForm> {
                   children: [
                     Text(
                       'Connexion',
-                      style: TextStyle(
-                        color: theme.colorScheme.onSecondary,
-                        fontSize: 25,
-                      ),
-                    ),
-                  ],
-                )
-            ),
-            const SizedBox(height: 20),
-            Stack(
-              children: [
-                Divider(
-                  endIndent: 30,
-                  indent: 30,
-                  thickness: 2,
-                  color: theme.colorScheme.onSurface,
-                ),
-                Center(
-                    child: Container(
-                      width: 40,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD1E4FF)
-                      ),
-                      child: const Center(child: Text('OU', style: TextStyle(fontSize: 18)))
-                    )
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () {
-                  if (loginFormKey.currentState!.validate()) {
-                    loginUser();
-                    logger.i('Connexion');
-                    //_navigateToNextScreen(context);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.secondary,
-                  fixedSize: Size(240, 50),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Créer un compte',
                       style: TextStyle(
                         color: theme.colorScheme.onSecondary,
                         fontSize: 25,

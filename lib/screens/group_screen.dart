@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/widgets/widgets.dart';
 
@@ -14,27 +15,38 @@ class GroupScreen extends StatefulWidget {
 }
 
 class _GroupScreenState extends State<GroupScreen> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   bool isLoading = false;
   late List<GroupModel>? groups = [
     GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client'), archived: false),
     GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client'), archived: false)
   ];
   List<GroupModel>? groups2;
+  String email = "";
 
   Future<void> initGroup() async {
     setState(() {
       isLoading = true;
     });
-    groups2 = (await GroupService().getGroupsByUser(1));
+    groups2 = (await GroupService().getGroupsByUser(email));
+    print(groups2);
     setState(() {
       isLoading = true;
     });
   }
 
+  Future<void> initializeSharedPreferences() async {
+    final String em = await prefs?.getString('email') ?? '';
+    setState(() {
+      email = em;
+    });
+    initGroup();
+  }
+
   @override
   void initState() {
     super.initState();
-    initGroup();
+    initializeSharedPreferences();
   }
 
   @override
@@ -60,7 +72,7 @@ class _GroupScreenState extends State<GroupScreen> {
         },
         child: const Icon(Icons.group_add),
       ),
-      drawer: (groups2!= null)?TopBarDrawer(title: "Groupes",groups: groups2 , user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')):TopBarDrawer(title: "Groupes", user: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client')),
+      drawer: (groups2!= null)?TopBarDrawer(title: "Groupes",groups: groups2 ):const TopBarDrawer(title: "Groupes"),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(

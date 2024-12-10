@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/screens/login_screen.dart';
+
+import '../models/user_model.dart';
+import '../services/users_services.dart';
 class OptionsMenu extends StatefulWidget {
   const OptionsMenu({super.key});
 
@@ -7,6 +12,38 @@ class OptionsMenu extends StatefulWidget {
 }
 
 class _OptionsMenuState extends State<OptionsMenu> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
+  String email = "";
+
+  void _navigateToLoginScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+  Future<void> logout() async {
+    bool result = (await UsersService().logout(email));
+    if(result){
+      await prefs?.setString('email', '');
+      await prefs?.setString('firstname', '');
+      await prefs?.setString('lastname', '');
+      await prefs?.setString('role', '');
+      _navigateToLoginScreen(context);
+    }
+  }
+
+  Future<void> initializeSharedPreferences() async {
+    final String em = await prefs?.getString('email') ?? '';
+    setState(() {
+      email = em;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeSharedPreferences();
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -44,7 +81,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
           ),
           MenuItemButton(
             onPressed: () {
-
+              logout();
             },
             child: const Row(
               children: [
