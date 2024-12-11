@@ -18,8 +18,8 @@ class _GroupScreenState extends State<GroupScreen> {
   SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   bool isLoading = false;
   late List<GroupModel>? groups = [
-    GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client'), archived: false),
-    GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client'), archived: false)
+    GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""), archived: false),
+    GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: ""), archived: false)
   ];
   List<GroupModel>? groups2;
   String email = "";
@@ -29,7 +29,6 @@ class _GroupScreenState extends State<GroupScreen> {
       isLoading = true;
     });
     groups2 = (await GroupService().getGroupsByUser(email));
-    print(groups2);
     setState(() {
       isLoading = true;
     });
@@ -55,6 +54,8 @@ class _GroupScreenState extends State<GroupScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
+        title: Center(child: Text('Groupes', style: TextStyle(color: theme.colorScheme.onPrimary),)),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(

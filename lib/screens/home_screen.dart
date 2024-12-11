@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tds2/widgets/widgets.dart';
 
-import '../models/user_model.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,6 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
+        title: Center(child: Text('Accueil', style: TextStyle(color: theme.colorScheme.onPrimary),)),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(

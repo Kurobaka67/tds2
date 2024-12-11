@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/user_model.dart';
-import 'package:tds2/screens/home_screen.dart';
+import '../screens/screens.dart';
 
 import '../logger.dart';
 import '../services/users_services.dart';
@@ -48,6 +48,7 @@ class _LoginFormState extends State<LoginForm> {
       await prefs?.setString('firstname', result[0].firstname);
       await prefs?.setString('lastname', result[0].lastname);
       await prefs?.setString('role', result[0].role);
+      await prefs?.setString('password', result[0].hashPassword);
       _navigateToHomeScreen(context);
     }
   }

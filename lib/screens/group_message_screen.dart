@@ -18,8 +18,8 @@ class GroupMessageScreen extends StatefulWidget {
 
 class _GroupMessageScreenState extends State<GroupMessageScreen> {
   List<UserModel> users = [
-    UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client'),
-    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client')
+    UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
+    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   List<MessageModel> messages = [];
 
@@ -39,6 +39,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
+        title: Center(child: Text(widget.group.name, style: TextStyle(color: theme.colorScheme.onPrimary),)),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(
@@ -49,7 +51,6 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
             ),
           )
         ],
-        title: Center(child: Text(widget.group.name)),
       ),
       drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users),
       body: SingleChildScrollView(

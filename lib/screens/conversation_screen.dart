@@ -12,7 +12,7 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   List<UserModel> contacts = [
-    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client')
+    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   late UserModel? contactValue = null;
 
@@ -22,6 +22,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
+        title: Center(child: Text('Conversations', style: TextStyle(color: theme.colorScheme.onPrimary),)),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(

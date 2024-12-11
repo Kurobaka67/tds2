@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tds2/screens/login_screen.dart';
-
-import '../models/user_model.dart';
+import '../screens/screens.dart';
 import '../services/users_services.dart';
+
 class OptionsMenu extends StatefulWidget {
   const OptionsMenu({super.key});
 
@@ -18,6 +17,11 @@ class _OptionsMenuState extends State<OptionsMenu> {
   void _navigateToLoginScreen(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+  }
+
+  void _navigateToOptionsScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const SettingScreen()));
   }
 
   Future<void> logout() async {
@@ -69,7 +73,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
         menuChildren: [
           MenuItemButton(
             onPressed: () {
-
+              _navigateToOptionsScreen(context);
             },
             child: const Row(
               children: [

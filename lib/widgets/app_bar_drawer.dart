@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/notification_model.dart';
+import 'package:tds2/screens/screens.dart';
 import '../models/user_model.dart';
 
 class TopBarDrawer extends StatefulWidget {
@@ -47,7 +48,6 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
 
     return Drawer(
       child: ListView(
-
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
@@ -55,7 +55,7 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
               color: theme.colorScheme.primary
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 0, top: 0, bottom: 20),
+              padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 20),
               child: Row(
                 children: [
                   Column(
@@ -70,16 +70,25 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                       const Spacer(),
                       SizedBox(
                         height: 25,
-                        width: 80,
+                        width: 90,
                         child: ElevatedButton(
                             onPressed: () {
-
+                              _navigateToProfileScreen(context);
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(horizontal: 0)
                             ),
-                            child: const Text("Modifier")
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Row(
+                                children: [
+                                  Text("Modifier"),
+                                  Spacer(),
+                                  Icon(Icons.mode_edit, size: 18,)
+                                ],
+                              ),
+                            )
                         ),
                       )
                     ],
@@ -196,6 +205,11 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
         ],
       ),
     );
+  }
+
+  void _navigateToProfileScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
   }
 }
 

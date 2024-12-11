@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tds2/screens/login_screen.dart';
+import '../screens/screens.dart';
 
 import '../logger.dart';
 import '../services/users_services.dart';
