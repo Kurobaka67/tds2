@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/message_model.dart';
 import 'package:tds2/models/user_model.dart';
+import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
+
+import '../services/groups_services.dart';
 
 class GroupMessageScreen extends StatefulWidget {
   final GroupModel group;
@@ -21,7 +24,22 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
     UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
+  List<UserModel>? users2;
   List<MessageModel> messages = [];
+
+  bool isLoading = false;
+
+  Future<void> initUsers() async {
+    setState(() {
+      isLoading = true;
+    });
+    print(widget.group.id);
+    users2 = (await UsersService().getUserByGroup(widget.group.id));
+    print(users2);
+    setState(() {
+      isLoading = true;
+    });
+  }
 
   @override
   void initState() {
@@ -31,6 +49,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
       MessageModel(user: users[1], content: "Salut", date: DateTime.now()),
       MessageModel(user: users[0], content: "Ca va ?", date: DateTime.now())
     ];
+    initUsers();
   }
 
   @override
@@ -52,7 +71,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
           )
         ],
       ),
-      drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users),
+      drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
       body: SingleChildScrollView(
         child: Column(
           children: [

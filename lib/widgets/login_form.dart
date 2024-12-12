@@ -33,8 +33,6 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> loginUser() async {
     setState(() {
       isLoading = true;
-    });
-    setState(() {
       email = emailController.text.toLowerCase();
       password = passwordController.text;
       isLoading = false;
@@ -49,6 +47,10 @@ class _LoginFormState extends State<LoginForm> {
       await prefs?.setString('lastname', result[0].lastname);
       await prefs?.setString('role', result[0].role);
       await prefs?.setString('password', result[0].hashPassword);
+      if(result[0].pictureEncoded != null){
+        String p = result[0].pictureEncoded as String;
+        await prefs?.setString('picture', p);
+      }
       _navigateToHomeScreen(context);
     }
   }

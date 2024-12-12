@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
@@ -26,13 +28,22 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
   List<NotificationModel> notifications = [];
   String firstname = "";
   String lastname = "";
+  String? pictureBase64String;
 
   Future<void> initializeSharedPreferences() async {
     final String fn = await prefs?.getString('firstname') ?? '';
     final String ln = await prefs?.getString('lastname') ?? '';
+
+    String? pic;
+    var r = await prefs?.getString('picture');
+    if(r != null && r.isNotEmpty){
+      pic = await prefs?.getString('picture');
+    }
+
     setState(() {
       firstname = fn;
       lastname = ln;
+      pictureBase64String = pic;
     });
   }
 
@@ -60,11 +71,11 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                 children: [
                   Column(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         height: 80,
                         width: 80,
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
+                          backgroundImage: pictureBase64String != null?MemoryImage(base64Decode(pictureBase64String!)):const NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
                         ),
                       ),
                       const Spacer(),
@@ -169,7 +180,13 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   children: [
-                    const Icon(Icons.person),
+                    SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: CircleAvatar(
+                        backgroundImage: widget.users![index].pictureEncoded != null?MemoryImage(base64Decode(widget.users![index].pictureEncoded!)):const NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
+                      ),
+                    ),
                     const Spacer(),
                     Row(
                       children: [

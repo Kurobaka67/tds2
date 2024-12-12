@@ -18,8 +18,8 @@ class _GroupScreenState extends State<GroupScreen> {
   SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   bool isLoading = false;
   late List<GroupModel>? groups = [
-    GroupModel(name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""), archived: false),
-    GroupModel(name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: ""), archived: false)
+    GroupModel(id: 1, name: "test", moderator: UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""), archived: false),
+    GroupModel(id: 2, name: "test2", moderator: UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: ""), archived: false)
   ];
   List<GroupModel>? groups2;
   String email = "";

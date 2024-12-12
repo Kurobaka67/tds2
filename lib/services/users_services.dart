@@ -97,10 +97,53 @@ class UsersService {
     }
   }
 
-  Future<bool> editUser(String firstname, String lastname, String email) async {
+  Future<List<UserModel>?> getUserByEmail(String email) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/user/$email');
+      var response = await client.get(uri);
+      if (response.statusCode == 200) {
+        return userModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+      }
+      else{
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return null;
+    }
+    catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<UserModel>?> getUserByGroup(int groupId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/users/group/$groupId');
+      var response = await client.get(uri);
+      if (response.statusCode == 200) {
+        return userModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+      }
+      else{
+        return null;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return null;
+    }
+    catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> editUser(String firstname, String lastname, String email, String? pictureEncoded) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/user');
+      print(pictureEncoded);
       var response = await client.put(uri,
           headers: {
             "Content-Type": "application/json",
@@ -109,6 +152,7 @@ class UsersService {
             "email": email,
             "firstname": firstname,
             "lastname": lastname,
+            "picture": pictureEncoded
           }));
       if (response.statusCode == 200) {
         return true;

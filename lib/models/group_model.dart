@@ -10,22 +10,26 @@ String groupModelToJson(List<GroupModel> data) =>
 
 class GroupModel {
   GroupModel({
+    required this.id,
     required this.name,
     required this.moderator,
     required this.archived
   });
 
+  int id;
   String name;
   UserModel moderator;
   bool archived;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
+    id: json["id"],
     name: json["name"],
     moderator: UserModel(firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"], hashPassword: json["password"]),
     archived: json["archived"],
   );
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "name": name,
     "moderator": moderator,
     "archived": archived,

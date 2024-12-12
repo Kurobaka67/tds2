@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
 
@@ -17,7 +19,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   SharedPreferencesAsync? prefs = SharedPreferencesAsync();
-  TextEditingController emailController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String firstname = '';
   String lastname = '';
   String password = '';
+  String? pictureBase64String;
   File? selectedImage;
   final picker = ImagePicker();
 
@@ -35,12 +37,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final String ln = await prefs?.getString('lastname') ?? '';
     final String em = await prefs?.getString('email') ?? '';
     final String pw = await prefs?.getString('password') ?? '';
+
+    String? pic;
+    var r = await prefs?.getString('picture');
+    if(r != null && r.isNotEmpty){
+      pic = await prefs?.getString('picture');
+    }
+
     setState(() {
       email = em;
       firstname = fn;
       lastname = ln;
       password = pw;
-      emailController.text = em;
+      pictureBase64String = pic;
       firstnameController.text = fn;
       lastnameController.text = ln;
       passwordController.text = pw;
@@ -48,12 +57,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> pickImageFromGallery() async {
-    print("picker");
     final returnedImage = await picker.pickImage(source: ImageSource.gallery);
 
     if(returnedImage == null) return;
+
     setState(() {
       selectedImage = File(returnedImage.path);
+    });
+    var _bytes = (await selectedImage?.readAsBytes());
+    setState(() {
+      pictureBase64String = base64.encode(_bytes as List<int>);
     });
   }
 
@@ -66,10 +79,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isLoading = true;
     });
-    if(email != emailController.text || firstname != firstnameController.text || lastname != lastnameController.text){
-      bool result = (await UsersService().editUser(firstname, lastname, email));
+    if(firstname != firstnameController.text || lastname != lastnameController.text || selectedImage != null){
+      setState(() {
+        firstname = firstnameController.text;
+        lastname = lastnameController.text;
+      });
+      bool result = (await UsersService().editUser(firstname, lastname, email, pictureBase64String));
+      print(result);
 
-      if(result){
+      List<UserModel>? u = (await UsersService().getUserByEmail( email ));
+
+      if(result && u != null){
+        await prefs?.setString('email', u[0].email);
+        await prefs?.setString('firstname', u[0].firstname);
+        await prefs?.setString('lastname', u[0].lastname);
+        await prefs?.setString('role', u[0].role);
+        await prefs?.setString('password', u[0].hashPassword);
+        if(u[0].pictureEncoded != null){
+          String p = u[0].pictureEncoded as String;
+          await prefs?.setString('picture', p);
+        }
         _navigateToHomeScreen(context);
       }
     }
@@ -117,11 +146,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Stack(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         height: 130,
                         width: 130,
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
+                          backgroundImage: selectedImage != null?FileImage(selectedImage!): pictureBase64String != null?MemoryImage(base64Decode(pictureBase64String!)):const NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
                         ),
                       ),
                       Container(
@@ -179,27 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       )
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                      controller: emailController,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurface,
-                        fontSize: 20,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            Icons.email_outlined,
-                            color: theme.colorScheme.onSurface,
-                            size: 30,
-                          ),
-                        ),
-                      )
-                  ),
+                  )
                 ],
               ),
             ),
