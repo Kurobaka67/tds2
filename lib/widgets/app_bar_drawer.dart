@@ -191,6 +191,8 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                     Row(
                       children: [
                         Text(widget.users![index].firstname),
+                        Text(' '),
+                        Text(widget.users![index].lastname),
                       ],
                     ),
                   ],

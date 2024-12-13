@@ -17,6 +17,7 @@ class UserModel {
     this.pictureEncoded
   });
 
+
   String firstname;
   String lastname;
   String email;

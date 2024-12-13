@@ -59,7 +59,66 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: const Column(
         children: [
           TopBarMenu(),
-          Text("conversation"),
+          Text('conversation'),
+        /*Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('messages')
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    final messages = snapshot.data!.docs;
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        return ListTile(
+                          title: Text(message['text']),
+                          subtitle: Text(
+                            message['timestamp'].toDate().toString(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _textEditingController,
+                        decoration: InputDecoration(
+                          hintText: 'Type a message',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () => _sendMessage(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),*/
         ],
       ),
     );

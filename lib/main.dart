@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/screens/home_screen.dart';
 import 'package:tds2/screens/login_screen.dart';
@@ -15,6 +15,7 @@ ColorScheme theme = ColorScheme.fromSeed(seedColor: Colors.blue);
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  //await Firebase.initializeApp();
 
   var permissionGranted = true;
   if (Platform.isAndroid) {

@@ -31,6 +31,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
       await prefs?.setString('firstname', '');
       await prefs?.setString('lastname', '');
       await prefs?.setString('role', '');
+      await prefs?.setString('picture', '');
       _navigateToLoginScreen(context);
     }
   }

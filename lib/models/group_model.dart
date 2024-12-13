@@ -22,14 +22,14 @@ class GroupModel {
   bool archived;
 
   factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
-    id: json["id"],
+    id: json["group_id"],
     name: json["name"],
     moderator: UserModel(firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"], hashPassword: json["password"]),
     archived: json["archived"],
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "group_id": id,
     "name": name,
     "moderator": moderator,
     "archived": archived,

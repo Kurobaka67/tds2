@@ -33,9 +33,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     setState(() {
       isLoading = true;
     });
-    print(widget.group.id);
     users2 = (await UsersService().getUserByGroup(widget.group.id));
-    print(users2);
     setState(() {
       isLoading = true;
     });

@@ -85,7 +85,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         lastname = lastnameController.text;
       });
       bool result = (await UsersService().editUser(firstname, lastname, email, pictureBase64String));
-      print(result);
 
       List<UserModel>? u = (await UsersService().getUserByEmail( email ));
 
