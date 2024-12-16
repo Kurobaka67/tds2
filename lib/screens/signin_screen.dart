@@ -55,7 +55,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
-                      height: 100,
+                      height: 140,
                     ),
                     const Center(
                         child: SigninForm()

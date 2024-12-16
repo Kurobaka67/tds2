@@ -2,18 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tds2/models/group_model.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:tds2/models/user_model.dart';
 import 'package:tds2/my_globals.dart' as globals;
 
+import 'firebase_api.dart';
+
 class UsersService {
   Future<List<UserModel>?> login(String email, String password) async {
     try {
+      var token = await FirebaseApi().init();
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/login');
       var response = await client.post(uri,
@@ -23,6 +21,7 @@ class UsersService {
           body: jsonEncode({
             "email": email,
             "password": password,
+            "token": token,
           }));
       if (response.statusCode == 200) {
         return userModelFromJson(const Utf8Decoder().convert(response.bodyBytes));

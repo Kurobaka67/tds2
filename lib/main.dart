@@ -9,13 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/screens/home_screen.dart';
 import 'package:tds2/screens/login_screen.dart';
 
+import 'firebase_options.dart';
+
 
 ColorScheme theme = ColorScheme.fromSeed(seedColor: Colors.blue);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  //await Firebase.initializeApp();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   var permissionGranted = true;
   if (Platform.isAndroid) {

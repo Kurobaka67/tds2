@@ -178,7 +178,7 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () {
                   if (loginFormKey.currentState!.validate()) {
                     loginUser();
-                    logger.i('Connexion');
+                    //logger.i('Connexion');
                   }
                 },
                 style: ElevatedButton.styleFrom(

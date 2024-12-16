@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
-                      height: 100,
+                      height: 120,
                     ),
                     const Center(
                         child: LoginForm()
