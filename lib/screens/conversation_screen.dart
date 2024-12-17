@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:tds2/widgets/widgets.dart';
 
@@ -15,6 +16,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
     UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   late UserModel? contactValue = null;
+  String? title = "";
+  String? body = "";
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +72,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
       ),
       drawer: TopBarDrawer(title: "Contact", users: contacts),
-      body: const Column(
+      body: Column(
         children: [
-          TopBarMenu(),
-          Text('conversation'),
+          const TopBarMenu(),
+          const Text('conversation'),
+          if (title != null)
+            Text(title!),
+          if (body != null)
+            Text(body!),
         /*Column(
             children: [
               Expanded(
