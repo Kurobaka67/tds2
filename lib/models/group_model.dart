@@ -24,7 +24,7 @@ class GroupModel {
   factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
     id: json["group_id"],
     name: json["name"],
-    moderator: UserModel(firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"], hashPassword: json["password"]),
+    moderator: UserModel(id: json["id"], firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"], hashPassword: json["password"]),
     archived: json["archived"],
   );
 

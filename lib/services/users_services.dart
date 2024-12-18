@@ -142,7 +142,6 @@ class UsersService {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/user');
-      print(pictureEncoded);
       var response = await client.put(uri,
           headers: {
             "Content-Type": "application/json",

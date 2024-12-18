@@ -26,4 +26,55 @@ class MessageService {
       }
       return null;
   }
+
+  Future<bool> createNewMessage(String content, int id) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/messages');
+      var response = await client.post(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "content": content,
+            "userId": id,
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> createNewGroupMessage(String content, int id, int groupId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/messages/group');
+      var response = await client.post(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "content": content,
+            "userId": id,
+            "groupId": groupId,
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
 }

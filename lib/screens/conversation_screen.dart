@@ -13,23 +13,35 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   List<UserModel> contacts = [
-    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
+    UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   late UserModel? contactValue = null;
   String? title = "";
   String? body = "";
 
+  Future<void> initFirebase() async {
+    print('start');
+    FirebaseMessaging.instance
+        .getInitialMessage();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      setState(() {
+        title = message.notification?.title;
+        body = message.notification?.body;
+      });
+      print(message.notification?.title);
+    });
+    print('end');
+  }
+
   @override
   void initState() {
     super.initState();
+    initFirebase();
+    /*FirebaseMessaging.instance
+        .getInitialMessage();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-    });
+      print(message.notification?.title);
+    });*/
   }
 
   @override

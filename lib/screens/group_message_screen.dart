@@ -21,11 +21,13 @@ class GroupMessageScreen extends StatefulWidget {
 
 class _GroupMessageScreenState extends State<GroupMessageScreen> {
   List<UserModel> users = [
-    UserModel(firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
-    UserModel(firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
+    UserModel(id: 1, firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
+    UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   List<UserModel>? users2;
   List<MessageModel> messages = [];
+  TextEditingController newMessageController = TextEditingController();
+  String newMessage = "";
 
   bool isLoading = false;
 
@@ -109,6 +111,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                     SizedBox(
                       width: 250,
                       child: TextField(
+                        controller: newMessageController,
                         decoration: InputDecoration(
                           fillColor: theme.colorScheme.primary.withOpacity(0.3),
                           filled: true,

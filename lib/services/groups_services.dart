@@ -15,8 +15,7 @@ class GroupService {
       var uri = Uri.parse('${globals.url}/groups');
       var response = await client.get(uri);
       if (response.statusCode == 200) {
-        print(response.bodyBytes);
-        //return requestModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+        return groupModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
       }
     } on TimeoutException catch (e) {
       log(e.toString());
@@ -46,23 +45,21 @@ class GroupService {
     return null;
   }
 
-  Future<void> createGroup() async {
+  Future<bool> createGroup() async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/group');
       var response = await client.post(uri);
-      print(response.statusCode);
       if (response.statusCode == 200) {
-        print(groupModelFromJson(const Utf8Decoder().convert(response.bodyBytes)));
-        //return requestModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+        return true;
       }
     } on TimeoutException catch (e) {
       log(e.toString());
-      return null;
+      return false;
     }
     catch (e) {
       log(e.toString());
     }
-    return null;
+    return false;
   }
 }

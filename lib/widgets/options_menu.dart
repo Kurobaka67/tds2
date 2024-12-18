@@ -27,6 +27,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
   Future<void> logout() async {
     bool result = (await UsersService().logout(email));
     if(result){
+      await prefs?.setInt('id', -1);
       await prefs?.setString('email', '');
       await prefs?.setString('firstname', '');
       await prefs?.setString('lastname', '');

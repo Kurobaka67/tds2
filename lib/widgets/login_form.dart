@@ -42,6 +42,7 @@ class _LoginFormState extends State<LoginForm> {
     emailController.clear();
     passwordController.clear();
     if(result != null) {
+      await prefs?.setInt('id', result[0].id);
       await prefs?.setString('email', result[0].email);
       await prefs?.setString('firstname', result[0].firstname);
       await prefs?.setString('lastname', result[0].lastname);
