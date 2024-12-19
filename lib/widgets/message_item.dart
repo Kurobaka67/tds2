@@ -28,7 +28,7 @@ class _MessageItemState extends State<MessageItem> {
       alignment: widget.type=="sent"?Alignment.centerRight:Alignment.centerLeft,
       child: Column(
         children: [
-          Text(widget.message.user.firstname),
+          Text(widget.message.user!.firstname),
           Card(
             color: theme.colorScheme.secondary,
             child: SizedBox(

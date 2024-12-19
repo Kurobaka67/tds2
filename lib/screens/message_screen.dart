@@ -9,26 +9,26 @@ import 'package:tds2/widgets/widgets.dart';
 
 import '../services/groups_services.dart';
 
-class GroupMessageScreen extends StatefulWidget {
+class MessageScreen extends StatefulWidget {
   final GroupModel group;
 
-  const GroupMessageScreen({
+  const MessageScreen({
     super.key,
     required this.group
   });
 
   @override
-  State<GroupMessageScreen> createState() => _GroupMessageScreenState();
+  State<MessageScreen> createState() => _MessageScreenState();
 }
 
-class _GroupMessageScreenState extends State<GroupMessageScreen> {
+class _MessageScreenState extends State<MessageScreen> {
   List<UserModel> users = [
     UserModel(id: 1, firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
     UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   List<UserModel>? users2;
   List<MessageModel> messages = [];
-  List<MessageModel> messages2 = [];
+  List<MessageModel>? messages2;
   TextEditingController newMessageController = TextEditingController();
   String newMessage = "";
 
@@ -49,12 +49,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     setState(() {
       isLoading = true;
     });
-    List<MessageModel>? result = (await MessageService().getAllMessagesByGroup(widget.group.id));
-    if(result != null){
-      setState(() {
-        messages2 = result;
-      });
-    }
+    messages2 = (await MessageService().getAllMessagesByGroup(widget.group.id));
+    print(messages2);
     setState(() {
       isLoading = true;
     });
@@ -65,7 +61,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
         .getInitialMessage();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       setState(() {
-        messages2.add(MessageModel(user: users.firstWhere((element) => element.id == int.parse(message.data.values.first)), content: message.notification!.body!, date: DateTime.now()));
+        messages.add(MessageModel(user: users[1], content: message.notification!.body!, date: DateTime.now()));
       });
     });
   }
@@ -111,12 +107,65 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
               child: ListView(
                 scrollDirection: Axis.vertical,
                 children: [
-                  for(var message in messages2)
+                  for(var message in messages)
                     MessageItem(message: message, type: message.user?.firstname=="Jonathan"?"sent":"received")
                 ],
               ),
             ),
-            NewMessageTextField(group: widget.group, messages: messages2,)
+            SizedBox(
+              height: 80,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 0),
+                              elevation: 0,
+                              backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                            ),
+                            onPressed: () {
+
+                            },
+                            child: const Icon(Icons.attach_file)
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: 250,
+                        child: TextField(
+                          controller: newMessageController,
+                          decoration: InputDecoration(
+                              fillColor: theme.colorScheme.primary.withOpacity(0.3),
+                              filled: true,
+                              border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(16))
+                              )
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: 50,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 0),
+                              elevation: 0,
+                              backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                            ),
+                            onPressed: () {
+
+                            },
+                            child: const Icon(Icons.send)
+                        ),
+                      )
+                    ],
+                  )
+              ),
+            )
           ],
         ),
       ),

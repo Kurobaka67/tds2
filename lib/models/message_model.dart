@@ -10,19 +10,19 @@ String messageModelToJson(List<MessageModel> data) =>
 
 class MessageModel {
   MessageModel({
-    required this.user,
+    this.user,
     required this.content,
     required this.date
   });
 
-  UserModel user;
+  UserModel? user;
   String content;
   DateTime date;
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
-    user: json["user"],
+    user: UserModel(id: json["id"], firstname: json["firstname"], lastname: json["lastname"], email: json["email"], role: json["role"], hashPassword: json["password"]),
     content: json["content"],
-    date: json["date"],
+    date: DateTime.parse(json["date"]),
   );
 
   Map<String, dynamic> toJson() => {

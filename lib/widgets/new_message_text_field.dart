@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
+import 'package:tds2/models/message_model.dart';
 import 'package:tds2/services/messages_services.dart';
 
 import '../screens/screens.dart';
 
 class NewMessageTextField extends StatefulWidget {
   final GroupModel group;
+  final List<MessageModel> messages;
 
   const NewMessageTextField({
     super.key,
-    required this.group
+    required this.group,
+    required this.messages,
   });
 
   @override
@@ -30,11 +33,11 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
         isLoading = true;
         newMessage = newMessageController.text;
       });
-      var result = MessageService().createNewGroupMessage(newMessage, userId, widget.group.id);
-
+      var result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group.id));
       setState(() {
         isLoading = false;
       });
+      if(result)newMessageController.clear();
     }
   }
 
@@ -100,7 +103,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                       backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
                     ),
                     onPressed: () {
-
+                      sendMessage();
                     },
                     child: const Icon(Icons.send)
                 ),

@@ -55,7 +55,7 @@ class MessageService {
   Future<bool> createNewGroupMessage(String content, int id, int groupId) async {
     try {
       var client = http.Client();
-      var uri = Uri.parse('${globals.url}/messages/group');
+      var uri = Uri.parse('${globals.url}/message/group');
       var response = await client.post(uri,
           headers: {
             "Content-Type": "application/json",

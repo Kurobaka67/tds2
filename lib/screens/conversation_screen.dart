@@ -20,7 +20,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String? body = "";
 
   Future<void> initFirebase() async {
-    print('start');
     FirebaseMessaging.instance
         .getInitialMessage();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -30,18 +29,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
       });
       print(message.notification?.title);
     });
-    print('end');
   }
 
   @override
   void initState() {
     super.initState();
     initFirebase();
-    /*FirebaseMessaging.instance
-        .getInitialMessage();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(message.notification?.title);
-    });*/
   }
 
   @override
