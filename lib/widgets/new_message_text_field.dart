@@ -1,19 +1,27 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/message_model.dart';
+import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/messages_services.dart';
 
 import '../screens/screens.dart';
 
 class NewMessageTextField extends StatefulWidget {
   final GroupModel group;
-  final List<MessageModel> messages;
+  final UserModel? user;
+  final void Function(MessageModel) addMessage;
+  final void Function() scrollDown;
 
   const NewMessageTextField({
     super.key,
     required this.group,
-    required this.messages,
+    required this.user,
+    required this.addMessage,
+    required this.scrollDown
   });
 
   @override
@@ -23,6 +31,7 @@ class NewMessageTextField extends StatefulWidget {
 class _NewMessageTextFieldState extends State<NewMessageTextField> {
   SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   TextEditingController newMessageController = TextEditingController();
+  List<File> filesImport = [];
   bool isLoading = false;
   String newMessage = "";
   int userId = -1;
@@ -37,7 +46,27 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
       setState(() {
         isLoading = false;
       });
-      if(result)newMessageController.clear();
+      if(result){
+        newMessageController.clear();
+        widget.addMessage(MessageModel(content: newMessage, date: DateTime.now(), user: widget.user));
+        widget.scrollDown();
+      }
+    }
+  }
+
+  Future<void> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['png', 'jpg', 'pdf', 'doc'],
+    );
+
+    if (result != null) {
+      List<File> files = result.paths.map((path) => File(path!)).toList();
+      files.forEach((element) => filesImport.add(element));
+      //print(filesImport);
+    } else {
+      print("No file selected");
     }
   }
 
@@ -74,7 +103,8 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                       backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
                     ),
                     onPressed: () {
-
+                      pickFile();
+                      //widget.scrollDown();
                     },
                     child: const Icon(Icons.attach_file)
                 ),

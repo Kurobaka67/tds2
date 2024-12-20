@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/widgets/widgets.dart';
 
-import '../models/user_model.dart';
-import '../services/groups_services.dart';
+import 'package:tds2/models/user_model.dart';
+import 'package:tds2/services/groups_services.dart';
 
 class GroupScreen extends StatefulWidget {
   const GroupScreen({super.key});

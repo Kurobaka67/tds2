@@ -15,6 +15,7 @@ class UserModel {
     required this.email,
     required this.role,
     required this.hashPassword,
+    this.roleGroup,
     this.pictureEncoded
   });
 
@@ -24,6 +25,7 @@ class UserModel {
   String email;
   String role;
   String hashPassword;
+  int? roleGroup;
   String? pictureEncoded;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -33,6 +35,7 @@ class UserModel {
     email: json["email"],
     role: json["role"],
     hashPassword: json["password"],
+    roleGroup: json["group_role"],
     pictureEncoded: json["picture"],
   );
 
@@ -43,6 +46,7 @@ class UserModel {
     "email": email,
     "role": role,
     "password": hashPassword,
+    "group_role": roleGroup,
     "picture": pictureEncoded,
   };
 }

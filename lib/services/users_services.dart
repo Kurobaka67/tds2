@@ -167,4 +167,31 @@ class UsersService {
       return false;
     }
   }
+
+  Future<bool> changeRoleUser(int userId, String role) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/user/role/$userId');
+      var response = await client.put(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "role": role,
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else{
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
 }

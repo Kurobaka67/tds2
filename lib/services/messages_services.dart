@@ -27,6 +27,24 @@ class MessageService {
       return null;
   }
 
+  Future<List<MessageModel>?> getMessageByUser(int userId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/messages/$userId');
+      var response = await client.get(uri);
+      if (response.statusCode == 200) {
+        return messageModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return null;
+    }
+    catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
   Future<bool> createNewMessage(String content, int id) async {
     try {
       var client = http.Client();

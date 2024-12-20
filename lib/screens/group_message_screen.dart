@@ -1,13 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/message_model.dart';
 import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/messages_services.dart';
 import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
-
-import '../services/groups_services.dart';
 
 class GroupMessageScreen extends StatefulWidget {
   final GroupModel group;
@@ -22,14 +21,17 @@ class GroupMessageScreen extends StatefulWidget {
 }
 
 class _GroupMessageScreenState extends State<GroupMessageScreen> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   List<UserModel> users = [
     UserModel(id: 1, firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
     UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   List<UserModel>? users2;
+  UserModel? user;
   List<MessageModel> messages = [];
   List<MessageModel> messages2 = [];
   TextEditingController newMessageController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   String newMessage = "";
 
   bool isLoading = false;
@@ -39,7 +41,9 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
       isLoading = true;
     });
     users2 = (await UsersService().getUserByGroup(widget.group.id));
+    var email = await prefs?.getString('email') ?? '';
     setState(() {
+      if(email != '' && users2 != null)user = users2?.firstWhere((element) => element.email == email,);
       isLoading = true;
     });
     initMessage();
@@ -70,6 +74,17 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     });
   }
 
+  void callback(MessageModel message) {
+    print('hey');
+    setState(() {
+      messages2.add(message);
+    });
+  }
+
+  void scrollDown() {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +100,12 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients)
+        scrollDown();
+    });
+
 
     return Scaffold(
       appBar: AppBar(
@@ -109,14 +130,15 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
             SizedBox(
               height: 580,
               child: ListView(
+                controller: scrollController,
                 scrollDirection: Axis.vertical,
                 children: [
                   for(var message in messages2)
-                    MessageItem(message: message, type: message.user?.firstname=="Jonathan"?"sent":"received")
+                    MessageItem(message: message, type: message.user?.email==user?.email?"sent":"received")
                 ],
               ),
             ),
-            NewMessageTextField(group: widget.group, messages: messages2,)
+            NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown)
           ],
         ),
       ),

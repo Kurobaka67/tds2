@@ -62,4 +62,55 @@ class GroupService {
     }
     return false;
   }
+
+  Future<bool> addUserToGroup(int groupId, int userId, int? groupRole) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/group/user');
+      var response = await client.post(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "groupId": groupId,
+            "userId": userId,
+            "groupRole": groupRole
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> changeGroupUserRole(int groupId, int userId, String role) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/group/user/role/$userId');
+      var response = await client.post(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "role": role,
+            "groupId": groupId,
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
 }
