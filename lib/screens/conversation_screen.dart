@@ -1,5 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:tds2/widgets/contact_item.dart';
 import 'package:tds2/widgets/widgets.dart';
 
 import '../models/user_model.dart';
@@ -16,25 +18,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
     UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   late UserModel? contactValue = null;
-  String? title = "";
-  String? body = "";
-
-  Future<void> initFirebase() async {
-    FirebaseMessaging.instance
-        .getInitialMessage();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      setState(() {
-        title = message.notification?.title;
-        body = message.notification?.body;
-      });
-      print(message.notification?.title);
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    initFirebase();
   }
 
   @override
@@ -80,11 +67,24 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: Column(
         children: [
           const TopBarMenu(),
-          const Text('conversation'),
-          if (title != null)
-            Text(title!),
-          if (body != null)
-            Text(body!),
+          if(contacts!=null)
+            SizedBox(
+              height: 200,
+              child: ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(
+                    color: Colors.black,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  itemCount: contacts!.length,
+                  itemBuilder: (context, index) => ContactItem(user: contacts![index])
+              ),
+            )
+          else
+            LoadingAnimationWidget.fourRotatingDots(
+              size: 50,
+              color: Colors.black45,
+            ),
         /*Column(
             children: [
               Expanded(

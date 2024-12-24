@@ -53,10 +53,12 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     setState(() {
       isLoading = true;
     });
-    List<MessageModel>? result = (await MessageService().getAllMessagesByGroup(widget.group.id));
+    List<MessageModel>? result;
+    if(user != null )result = (await MessageService().getAllMessagesByGroup(widget.group.id, user!.id));
     if(result != null){
       setState(() {
-        messages2 = result;
+        messages2 = result!;
+        print(result[3].role);
       });
     }
     setState(() {

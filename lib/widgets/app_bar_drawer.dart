@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/notification_model.dart';
 import 'package:tds2/screens/screens.dart';
+import 'package:tds2/widgets/show_role_group_icon.dart';
 import '../models/user_model.dart';
 
 class TopBarDrawer extends StatefulWidget {
@@ -191,8 +192,10 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
                     Row(
                       children: [
                         Text(widget.users![index].firstname),
-                        Text(' '),
+                        const Text(' '),
                         Text(widget.users![index].lastname),
+                        const Text(' '),
+                        ShowRoleGroupIcon(roleGroup: widget.users![index].roleGroup,),
                       ],
                     ),
                   ],

@@ -10,11 +10,11 @@ import 'package:tds2/widgets/widgets.dart';
 import '../services/groups_services.dart';
 
 class MessageScreen extends StatefulWidget {
-  final GroupModel group;
+  final UserModel receiver;
 
   const MessageScreen({
     super.key,
-    required this.group
+    required this.receiver
   });
 
   @override
@@ -22,11 +22,6 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  List<UserModel> users = [
-    UserModel(id: 1, firstname: "Jonathan", lastname: "GRILL", email: "Jonathan@gmail.com", role: 'client', hashPassword: ""),
-    UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
-  ];
-  List<UserModel>? users2;
   List<MessageModel> messages = [];
   List<MessageModel>? messages2;
   TextEditingController newMessageController = TextEditingController();
@@ -34,22 +29,11 @@ class _MessageScreenState extends State<MessageScreen> {
 
   bool isLoading = false;
 
-  Future<void> initUsers() async {
-    setState(() {
-      isLoading = true;
-    });
-    users2 = (await UsersService().getUserByGroup(widget.group.id));
-    setState(() {
-      isLoading = true;
-    });
-    initMessage();
-  }
-
   Future<void> initMessage() async {
     setState(() {
       isLoading = true;
     });
-    messages2 = (await MessageService().getAllMessagesByGroup(widget.group.id));
+    messages2 = (await MessageService().getMessageByUser(widget.receiver.id));
     print(messages2);
     setState(() {
       isLoading = true;
@@ -61,7 +45,7 @@ class _MessageScreenState extends State<MessageScreen> {
         .getInitialMessage();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       setState(() {
-        messages.add(MessageModel(user: users[1], content: message.notification!.body!, date: DateTime.now()));
+        //messages.add(MessageModel(user: users[1], content: message.notification!.body!, date: DateTime.now()));
       });
     });
   }
@@ -69,12 +53,6 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    messages = [
-      MessageModel(user: users[0], content: "Bonjour", date: DateTime.now()),
-      MessageModel(user: users[1], content: "Salut", date: DateTime.now()),
-      MessageModel(user: users[0], content: "Ca va ?", date: DateTime.now())
-    ];
-    initUsers();
     initFirebase();
   }
 
@@ -85,7 +63,7 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
-        title: Center(child: Text(widget.group.name, style: TextStyle(color: theme.colorScheme.onPrimary),)),
+        title: Center(child: Text(widget.receiver.firstname, style: TextStyle(color: theme.colorScheme.onPrimary),)),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(
@@ -97,7 +75,7 @@ class _MessageScreenState extends State<MessageScreen> {
           )
         ],
       ),
-      drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
+      drawer: const TopBarDrawer(title: "Conversation"),
       body: SingleChildScrollView(
         child: Column(
           children: [
