@@ -1,5 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:tds2/widgets/contact_item.dart';
 import 'package:tds2/widgets/widgets.dart';
@@ -18,10 +20,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
     UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
   late UserModel? contactValue = null;
+  TextEditingController emailController = TextEditingController();
+
+  void initContact() {
+
+  }
 
   @override
   void initState() {
     super.initState();
+    initContact();
   }
 
   @override
@@ -63,7 +71,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ),
         ],
       ),
-      drawer: TopBarDrawer(title: "Contact", users: contacts),
+      drawer: TopBarDrawer(title: "Contact", contacts: contacts),
       body: Column(
         children: [
           const TopBarMenu(),
@@ -85,65 +93,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
               size: 50,
               color: Colors.black45,
             ),
-        /*Column(
-            children: [
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('messages')
-                      .orderBy('timestamp', descending: true)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    final messages = snapshot.data!.docs;
-                    return ListView.builder(
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final message = messages[index];
-                        return ListTile(
-                          title: Text(message['text']),
-                          subtitle: Text(
-                            message['timestamp'].toDate().toString(),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _textEditingController,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message',
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () => _sendMessage(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),*/
         ],
       ),
     );
@@ -167,8 +116,66 @@ class _ConversationScreenState extends State<ConversationScreen> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Ajouté un contact"),
-      content: const Text("Would you like to continue learning how to use Flutter alerts?"),
-      actions: [
+      content: SizedBox(
+        height: 200,
+        child: Column(
+          children: [
+            const Text("Entrer l'adresse mail de la personne que vous voulez ajouter en ami."),
+            TextFormField(
+              onEditingComplete: () {
+                SystemChrome.restoreSystemUIOverlays();
+              },
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const <String>[AutofillHints.email],
+              controller: emailController,
+              validator:
+              EmailValidator(errorText: 'Veuillez entrer un email').call,
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontSize: 20,
+              ),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                hintText: 'Email',
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(
+                    Icons.mail_outline,
+                    color: theme.colorScheme.onSurface,
+                    size: 30,
+                  ),
+                ),
+                hintStyle: TextStyle(
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 20,
+                ),
+                errorStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ]
+        ),
+      ),
+        actions: [
         cancelButton,
         continueButton,
       ],
@@ -203,44 +210,47 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
       title: const Text("Créer une conversation"),
       content: Form(
-        child: Column(
-          children: [
-            const Align(
+        child: SizedBox(
+          height: 300,
+          child: Column(
+            children: [
+              const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text("Contact : ")
+              ),
+              Align(
                 alignment: Alignment.topLeft,
-                child: Text("Contact : ")
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                width: 220,
-                child: DropdownButton(
-                  value: contactValue ?? contacts[0],
-                  items: contacts.map((contact) {
-                    return DropdownMenuItem<UserModel>(
-                      value: contact,
-                      child: Text(contact.firstname)
-                    );
-                  }).toList(),
-                  onChanged: (UserModel? newValue) {
-                    setState(() {
-                      contactValue = newValue!;
-                    });
-                  },
+                child: SizedBox(
+                  width: 220,
+                  child: DropdownButton(
+                    value: contactValue ?? contacts[0],
+                    items: contacts.map((contact) {
+                      return DropdownMenuItem<UserModel>(
+                        value: contact,
+                        child: Text(contact.firstname)
+                      );
+                    }).toList(),
+                    onChanged: (UserModel? newValue) {
+                      setState(() {
+                        contactValue = newValue!;
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(),
-            const Align(
-                alignment: Alignment.topLeft,
-                child: Text("Message : ")
-            ),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: TextField(
-        
+              const SizedBox(),
+              const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text("Message : ")
               ),
-            )
-          ],
+              const Align(
+                alignment: Alignment.topLeft,
+                child: TextField(
+
+                ),
+              )
+            ],
+          ),
         ),
       ),
       actions: [
