@@ -1,5 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:keyboard_actions/keyboard_actions_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/message_model.dart';
@@ -34,6 +36,13 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   ScrollController scrollController = ScrollController();
   String newMessage = "";
 
+  final FocusNode _nodeText1 = FocusNode();
+  final FocusNode _nodeText2 = FocusNode();
+  final FocusNode _nodeText3 = FocusNode();
+  final FocusNode _nodeText4 = FocusNode();
+  final FocusNode _nodeText5 = FocusNode();
+  final FocusNode _nodeText6 = FocusNode();
+
   bool isLoading = false;
 
   Future<void> initUsers() async {
@@ -54,7 +63,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
       isLoading = true;
     });
     List<MessageModel>? result;
-    if(user != null )result = (await MessageService().getAllMessagesByGroup(widget.group.id, user!.id));
+    if(user != null )result = (await MessageService().getAllMessagesByGroup(widget.group.id, user!.id, user!.roleGroup));
     if(result != null){
       setState(() {
         messages2 = result!;
@@ -99,15 +108,97 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     initFirebase();
   }
 
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(
+          focusNode: _nodeText1,
+        ),
+        KeyboardActionsItem(focusNode: _nodeText2, toolbarButtons: [
+              (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(
+          focusNode: _nodeText3,
+          onTapAction: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text("Custom Action"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  );
+                });
+          },
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText4,
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText5,
+          toolbarButtons: [
+            //button 1
+                (node) {
+              return GestureDetector(
+                onTap: () => node.unfocus(),
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "CLOSE",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              );
+            },
+            //button 2
+                (node) {
+              return GestureDetector(
+                onTap: () => node.unfocus(),
+                child: Container(
+                  color: Colors.black,
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "DONE",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }
+          ],
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText6,
+          footerBuilder: (_) => PreferredSize(
+              child: SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: Text('Custom Footer'),
+                  )),
+              preferredSize: Size.fromHeight(40)),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients)
-        scrollDown();
-    });
-
 
     return Scaffold(
       appBar: AppBar(
@@ -125,23 +216,26 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
         ],
       ),
       drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const TopBarMenu(),
-            SizedBox(
-              height: 580,
-              child: ListView(
-                controller: scrollController,
-                scrollDirection: Axis.vertical,
-                children: [
-                  for(var message in messages2)
-                    MessageItem(message: message, type: message.user?.email==user?.email?"sent":"received")
-                ],
+      body: KeyboardActions(
+        config: _buildConfig(context),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const TopBarMenu(),
+              SizedBox(
+                height: 580,
+                child: ListView(
+                  controller: scrollController,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    for(var message in messages2)
+                      MessageItem(message: message, type: message.user?.email==user?.email?"sent":"received")
+                  ],
+                ),
               ),
-            ),
-            NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown)
-          ],
+              NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown)
+            ],
+          ),
         ),
       ),
     );

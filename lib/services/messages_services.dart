@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:tds2/my_globals.dart' as globals;
 
 class MessageService {
-  Future<List<MessageModel>?> getAllMessagesByGroup(int groupId, int userId) async {
+  Future<List<MessageModel>?> getAllMessagesByGroup(int groupId, int userId, int? role) async {
       try {
         var client = http.Client();
         var uri = Uri.parse('${globals.url}/messages/group/$groupId');
@@ -19,6 +19,7 @@ class MessageService {
             },
             body: jsonEncode({
               "userId": userId,
+              "groupRole": role
             }));
         if (response.statusCode == 200) {
           return messageModelFromJson(const Utf8Decoder().convert(response.bodyBytes));

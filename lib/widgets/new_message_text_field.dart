@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:keyboard_actions/keyboard_actions_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/message_model.dart';
@@ -35,6 +37,12 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
   bool isLoading = false;
   String newMessage = "";
   int userId = -1;
+  String roleItemSelected = 'Amis';
+  var roleItems = [
+    'Amis',
+    'Amis proches',
+  ];
+
 
   Future<void> sendMessage() async {
     if(newMessageController.text.isNotEmpty && userId > 0) {
@@ -83,61 +91,184 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
     initializeSharedPreferences();
   }
 
+  final FocusNode _nodeText1 = FocusNode();
+  final FocusNode _nodeText2 = FocusNode();
+  final FocusNode _nodeText3 = FocusNode();
+  final FocusNode _nodeText4 = FocusNode();
+  final FocusNode _nodeText5 = FocusNode();
+  final FocusNode _nodeText6 = FocusNode();
+
+  /// Creates the [KeyboardActionsConfig] to hook up the fields
+  /// and their focus nodes to our [FormKeyboardActions].
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(
+          focusNode: _nodeText1,
+        ),
+        KeyboardActionsItem(focusNode: _nodeText2, toolbarButtons: [
+              (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(
+          focusNode: _nodeText3,
+          onTapAction: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text("Custom Action"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  );
+                });
+          },
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText4,
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText5,
+          toolbarButtons: [
+            //button 1
+                (node) {
+              return GestureDetector(
+                onTap: () => node.unfocus(),
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "CLOSE",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              );
+            },
+            //button 2
+                (node) {
+              return GestureDetector(
+                onTap: () => node.unfocus(),
+                child: Container(
+                  color: Colors.black,
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "DONE",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }
+          ],
+        ),
+        KeyboardActionsItem(
+          focusNode: _nodeText6,
+          footerBuilder: (_) => PreferredSize(
+              child: SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: Text('Custom Footer'),
+                  )),
+              preferredSize: Size.fromHeight(40)),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
     return SizedBox(
-      height: 80,
+      height: 120,
       width: MediaQuery.of(context).size.width,
       child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
+          child: Column(
             children: [
-              SizedBox(
-                width: 50,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      elevation: 0,
-                      backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
-                    ),
-                    onPressed: () {
-                      pickFile();
-                      //widget.scrollDown();
+              Row(
+                children: [
+                  Container(),
+                  const Spacer(),
+                  DropdownButton(
+                    value: roleItemSelected,
+                    items: roleItems.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        roleItemSelected = newValue!;
+                      });
                     },
-                    child: const Icon(Icons.attach_file)
-                ),
+                  )
+                ],
               ),
-              const Spacer(),
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: newMessageController,
-                  decoration: InputDecoration(
-                      fillColor: theme.colorScheme.primary.withOpacity(0.3),
-                      filled: true,
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16))
-                      )
+              Row(
+                children: [
+                  SizedBox(
+                    width: 50,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          elevation: 0,
+                          backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                        ),
+                        onPressed: () {
+                          pickFile();
+                          //widget.scrollDown();
+                        },
+                        child: const Icon(Icons.attach_file)
+                    ),
                   ),
-                ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: 50,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      elevation: 0,
-                      backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                  const Spacer(),
+                  SizedBox(
+                    width: 250,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      focusNode: _nodeText1,
+                      controller: newMessageController,
+                      decoration: InputDecoration(
+                          fillColor: theme.colorScheme.primary.withOpacity(0.3),
+                          filled: true,
+                          border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(16))
+                          )
+                      ),
                     ),
-                    onPressed: () {
-                      sendMessage();
-                    },
-                    child: const Icon(Icons.send)
-                ),
-              )
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: 50,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          elevation: 0,
+                          backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                        ),
+                        onPressed: () {
+                          sendMessage();
+                        },
+                        child: const Icon(Icons.send)
+                    ),
+                  )
+                ],
+              ),
             ],
           )
       ),

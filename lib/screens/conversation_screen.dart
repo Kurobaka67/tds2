@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/models/contact_model.dart';
 import 'package:tds2/widgets/contact_item.dart';
 import 'package:tds2/widgets/widgets.dart';
 
 import '../models/user_model.dart';
+import '../services/contacts_services.dart';
+import '../services/users_services.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({super.key});
@@ -16,14 +20,48 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
+  SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   List<UserModel> contacts = [
     UserModel(id: 2, firstname: "Jon", lastname: "LEJEUNE", email: "Jon@gmail.com", role: 'client', hashPassword: "")
   ];
+  List<ContactModel>? contacts2;
+  UserModel? user;
   late UserModel? contactValue = null;
   TextEditingController emailController = TextEditingController();
 
-  void initContact() {
+  bool isLoading = false;
 
+  Future<void> initUser() async {
+    var email = await prefs?.getString('email') ?? '';
+    setState(() {
+      isLoading = true;
+    });
+    List<UserModel>? result = (await UsersService().getUserByEmail(email));
+    if(result != null){
+      setState(() {
+        user = result[0];
+      });
+    }
+    setState(() {
+      isLoading = true;
+    });
+    initContact();
+  }
+
+  Future<void> initContact() async {
+    setState(() {
+      isLoading = true;
+    });
+    List<ContactModel>? result;
+    if(user != null )result = (await ContactsServices().getContactsByUser(user!.id));
+    if(result != null){
+      setState(() {
+        contacts2 = result!;
+      });
+    }
+    setState(() {
+      isLoading = true;
+    });
   }
 
   @override
