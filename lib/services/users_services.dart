@@ -194,4 +194,25 @@ class UsersService {
       return false;
     }
   }
+
+  Future<bool> deleteAccount(int userId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/user/$userId');
+      var response = await client.delete(uri);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else{
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
 }

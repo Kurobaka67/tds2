@@ -71,7 +71,7 @@ class ContactsServices {
     return null;
   }
 
-  Future<List<ContactModel>?> deleteContactsToUser(int userId) async {
+  Future<bool> deleteContactsToUser(int userId) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/contacts');
@@ -83,15 +83,15 @@ class ContactsServices {
             "userId": userId,
           }));
       if (response.statusCode == 200) {
-        return contactModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+        return true;
       }
     } on TimeoutException catch (e) {
       log(e.toString());
-      return null;
+      return false;
     }
     catch (e) {
       log(e.toString());
     }
-    return null;
+    return false;
   }
 }

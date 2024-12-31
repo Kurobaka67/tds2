@@ -15,8 +15,6 @@ class OptionUserOnClick extends StatefulWidget {
 
 class _OptionUserOnClickState extends State<OptionUserOnClick> {
 
-  
-
   @override
   Widget build(BuildContext context) {
 

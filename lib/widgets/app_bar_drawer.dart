@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/notification_model.dart';
 import 'package:tds2/screens/screens.dart';
+import 'package:tds2/services/contacts_services.dart';
 import 'package:tds2/widgets/option_user_on_click.dart';
 import 'package:tds2/widgets/show_role_group_icon.dart';
 import '../models/user_model.dart';
@@ -32,7 +33,9 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
   List<NotificationModel> notifications = [];
   String firstname = "";
   String lastname = "";
+  UserModel? user;
   String? pictureBase64String;
+  bool isLoading = false;
 
   Future<void> initializeSharedPreferences() async {
     final String fn = await prefs?.getString('firstname') ?? '';
@@ -55,6 +58,22 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
   void initState() {
     super.initState();
     initializeSharedPreferences();
+  }
+
+  void showDialogContactDeleteConfirm() {
+    print('deleted');
+  }
+
+  Future<void> deleteContact() async {
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    if(user != null) result = (await ContactsServices().deleteContactsToUser(user!.id));
+    if(result)showDialogContactDeleteConfirm();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void showContactPopupMenu() async {

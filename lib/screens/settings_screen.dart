@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
 
@@ -21,11 +22,16 @@ class _SettingScreenState extends State<SettingScreen> {
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  UserModel? user;
+  bool isNotif = true;
 
   bool isLoading = false;
 
-  Future<void> initializeSharedPreferences() async {
+  Future<void> initUser() async {
+    var email = await prefs?.getString('email') ?? '';
+    List<UserModel>? result = (await UsersService().getUserByEmail(email));
     setState(() {
+      if(result != null)user = result[0];
     });
   }
 
@@ -34,10 +40,35 @@ class _SettingScreenState extends State<SettingScreen> {
         .push(MaterialPageRoute(builder: (context) => const HomeScreen()));
   }
 
+  Future<bool> showDialogConfirm() async {
+    return false;
+  }
+
+  Future<void> showDialogAccountDeleted() async {
+
+  }
+
+  Future<void> deleteAccount() async {
+    bool isConfirm = await showDialogConfirm();
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    if(user != null )result = (await UsersService().deleteAccount(user!.id));
+    if(result == true){
+      setState(() {
+        showDialogAccountDeleted();
+      });
+    }
+    setState(() {
+      isLoading = true;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    initializeSharedPreferences();
+    initUser();
   }
 
   @override

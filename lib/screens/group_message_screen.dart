@@ -36,13 +36,6 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   ScrollController scrollController = ScrollController();
   String newMessage = "";
 
-  final FocusNode _nodeText1 = FocusNode();
-  final FocusNode _nodeText2 = FocusNode();
-  final FocusNode _nodeText3 = FocusNode();
-  final FocusNode _nodeText4 = FocusNode();
-  final FocusNode _nodeText5 = FocusNode();
-  final FocusNode _nodeText6 = FocusNode();
-
   bool isLoading = false;
 
   Future<void> initUsers() async {
@@ -67,7 +60,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     if(result != null){
       setState(() {
         messages2 = result!;
-        print(result[3].role);
+        print(user!.roleGroup);
       });
     }
     setState(() {
@@ -108,6 +101,13 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     initFirebase();
   }
 
+  final FocusNode _nodeText1 = FocusNode();
+  final FocusNode _nodeText2 = FocusNode();
+  final FocusNode _nodeText3 = FocusNode();
+  final FocusNode _nodeText4 = FocusNode();
+  final FocusNode _nodeText5 = FocusNode();
+  final FocusNode _nodeText6 = FocusNode();
+
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
@@ -121,7 +121,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
               (node) {
             return GestureDetector(
               onTap: () => node.unfocus(),
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
               ),
@@ -135,10 +135,10 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    content: Text("Custom Action"),
+                    content: const Text("Custom Action"),
                     actions: <Widget>[
                       ElevatedButton(
-                        child: Text("OK"),
+                        child: const Text("OK"),
                         onPressed: () => Navigator.of(context).pop(),
                       )
                     ],
@@ -158,8 +158,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                 onTap: () => node.unfocus(),
                 child: Container(
                   color: Colors.white,
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
                     "CLOSE",
                     style: TextStyle(color: Colors.black),
                   ),
@@ -172,8 +172,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                 onTap: () => node.unfocus(),
                 child: Container(
                   color: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
                     "DONE",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -184,13 +184,14 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
         ),
         KeyboardActionsItem(
           focusNode: _nodeText6,
-          footerBuilder: (_) => PreferredSize(
-              child: SizedBox(
-                  height: 40,
-                  child: Center(
-                    child: Text('Custom Footer'),
-                  )),
-              preferredSize: Size.fromHeight(40)),
+          footerBuilder: (_) =>
+              const PreferredSize(
+                  preferredSize: Size.fromHeight(40),
+                  child: SizedBox(
+                      height: 40,
+                      child: Center(
+                        child: Text('Custom Footer'),
+                      ))),
         ),
       ],
     );
@@ -218,6 +219,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
       drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
       body: KeyboardActions(
         config: _buildConfig(context),
+        tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -233,7 +235,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                   ],
                 ),
               ),
-              NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown)
+              NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown, nodeText: _nodeText1)
             ],
           ),
         ),

@@ -10,6 +10,7 @@ import 'package:tds2/models/message_model.dart';
 import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/messages_services.dart';
 
+import '../models/group_role_model.dart';
 import '../screens/screens.dart';
 
 class NewMessageTextField extends StatefulWidget {
@@ -17,13 +18,15 @@ class NewMessageTextField extends StatefulWidget {
   final UserModel? user;
   final void Function(MessageModel) addMessage;
   final void Function() scrollDown;
+  final FocusNode nodeText;
 
   const NewMessageTextField({
     super.key,
     required this.group,
     required this.user,
     required this.addMessage,
-    required this.scrollDown
+    required this.scrollDown,
+    required this.nodeText
   });
 
   @override
@@ -37,10 +40,10 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
   bool isLoading = false;
   String newMessage = "";
   int userId = -1;
-  String roleItemSelected = 'Amis';
-  var roleItems = [
-    'Amis',
-    'Amis proches',
+  int roleItemSelected = 2;
+  List<GroupRoleModel> roleItems = [
+    GroupRoleModel(text: "Amis", value: 2),
+    GroupRoleModel(text: "Amis proche", value: 1),
   ];
 
 
@@ -50,7 +53,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
         isLoading = true;
         newMessage = newMessageController.text;
       });
-      var result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group.id));
+      var result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group.id, roleItemSelected));
       setState(() {
         isLoading = false;
       });
@@ -91,103 +94,6 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
     initializeSharedPreferences();
   }
 
-  final FocusNode _nodeText1 = FocusNode();
-  final FocusNode _nodeText2 = FocusNode();
-  final FocusNode _nodeText3 = FocusNode();
-  final FocusNode _nodeText4 = FocusNode();
-  final FocusNode _nodeText5 = FocusNode();
-  final FocusNode _nodeText6 = FocusNode();
-
-  /// Creates the [KeyboardActionsConfig] to hook up the fields
-  /// and their focus nodes to our [FormKeyboardActions].
-  KeyboardActionsConfig _buildConfig(BuildContext context) {
-    return KeyboardActionsConfig(
-      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-      keyboardBarColor: Colors.grey[200],
-      nextFocus: true,
-      actions: [
-        KeyboardActionsItem(
-          focusNode: _nodeText1,
-        ),
-        KeyboardActionsItem(focusNode: _nodeText2, toolbarButtons: [
-              (node) {
-            return GestureDetector(
-              onTap: () => node.unfocus(),
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.close),
-              ),
-            );
-          }
-        ]),
-        KeyboardActionsItem(
-          focusNode: _nodeText3,
-          onTapAction: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text("Custom Action"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        child: Text("OK"),
-                        onPressed: () => Navigator.of(context).pop(),
-                      )
-                    ],
-                  );
-                });
-          },
-        ),
-        KeyboardActionsItem(
-          focusNode: _nodeText4,
-        ),
-        KeyboardActionsItem(
-          focusNode: _nodeText5,
-          toolbarButtons: [
-            //button 1
-                (node) {
-              return GestureDetector(
-                onTap: () => node.unfocus(),
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "CLOSE",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              );
-            },
-            //button 2
-                (node) {
-              return GestureDetector(
-                onTap: () => node.unfocus(),
-                child: Container(
-                  color: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "DONE",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            }
-          ],
-        ),
-        KeyboardActionsItem(
-          focusNode: _nodeText6,
-          footerBuilder: (_) => PreferredSize(
-              child: SizedBox(
-                  height: 40,
-                  child: Center(
-                    child: Text('Custom Footer'),
-                  )),
-              preferredSize: Size.fromHeight(40)),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -205,13 +111,13 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                   const Spacer(),
                   DropdownButton(
                     value: roleItemSelected,
-                    items: roleItems.map((String items) {
+                    items: roleItems.map((GroupRoleModel items) {
                       return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
+                        value: items.value,
+                        child: Text(items.text),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
+                    onChanged: (int? newValue) {
                       setState(() {
                         roleItemSelected = newValue!;
                       });
@@ -240,8 +146,8 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                   SizedBox(
                     width: 250,
                     child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: _nodeText1,
+                      keyboardType: TextInputType.text,
+                      focusNode: widget.nodeText,
                       controller: newMessageController,
                       decoration: InputDecoration(
                           fillColor: theme.colorScheme.primary.withOpacity(0.3),

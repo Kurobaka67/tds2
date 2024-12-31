@@ -77,7 +77,7 @@ class MessageService {
     return false;
   }
 
-  Future<bool> createNewGroupMessage(String content, int id, int groupId) async {
+  Future<bool> createNewGroupMessage(String content, int id, int groupId, int roleGroup) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/message/group');
