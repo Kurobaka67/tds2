@@ -23,7 +23,12 @@ class _SettingScreenState extends State<SettingScreen> {
   TextEditingController lastnameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   UserModel? user;
-  bool isNotif = true;
+  bool? isNotif = true;
+  String themeSelected = "Clair";
+  List<String> themes = [
+    "Clair",
+    "Sombre"
+  ];
 
   bool isLoading = false;
 
@@ -102,91 +107,54 @@ class _SettingScreenState extends State<SettingScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Stack(
-                    children: [
-                      const SizedBox(
-                        height: 130,
-                        width: 130,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"),
-                        ),
+                  CheckboxListTile(
+                    title: const Row(
+                      children: [
+                        Text("Notification"),
+                        Icon(Icons.notifications)
+                      ],
+                    ),
+                    value: isNotif,
+                    onChanged: (newValue) {
+                      setState(() {
+                        isNotif = newValue;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                  ),
+                  const SizedBox(
+                    height: 20,
+                    child: Divider(),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                        children: [
+                          const Text('theme'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: DropdownButton(
+                              value: themeSelected,
+                              items: themes.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(items),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  themeSelected = newValue!;
+                                });
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                      Container(
-                        height: 130,
-                        width: 130,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(75)
-                        ),
-                        child: IconButton(
-                            onPressed: () {
+                    ),
+                  )
 
-                            },
-                            icon: const Icon(Icons.mode_edit, size: 30, color: Colors.white)
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                      controller: firstnameController,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurface,
-                        fontSize: 20,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            Icons.account_circle_rounded,
-                            color: theme.colorScheme.onSurface,
-                            size: 30,
-                          ),
-                        ),
-                      )
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                      controller: lastnameController,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurface,
-                        fontSize: 20,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            Icons.account_circle_rounded,
-                            color: theme.colorScheme.onSurface,
-                            size: 30,
-                          ),
-                        ),
-                      )
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                      controller: emailController,
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurface,
-                        fontSize: 20,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            Icons.email_outlined,
-                            color: theme.colorScheme.onSurface,
-                            size: 30,
-                          ),
-                        ),
-                      )
-                  ),
                 ],
               ),
             ),

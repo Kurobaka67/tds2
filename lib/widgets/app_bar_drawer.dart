@@ -6,6 +6,7 @@ import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/notification_model.dart';
 import 'package:tds2/screens/screens.dart';
 import 'package:tds2/services/contacts_services.dart';
+import 'package:tds2/widgets/dialog_popup.dart';
 import 'package:tds2/widgets/option_user_on_click.dart';
 import 'package:tds2/widgets/show_role_group_icon.dart';
 import '../models/user_model.dart';
@@ -61,7 +62,23 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
   }
 
   void showDialogContactDeleteConfirm() {
-    print('deleted');
+    print('deleted contact');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const DialogPopUp(title: "Supprimer le contacte", content: "Etes-vous sure de vouloir supprimer ce contact ?");
+      },
+    );
+  }
+
+  void showDialogGroupDeleteConfirm() {
+    print('deleted group');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const DialogPopUp(title: "Supprimer le groupe", content: "Etes-vous sure de vouloir enlever ce groupe de votre liste ?");
+      },
+    );
   }
 
   Future<void> deleteContact() async {
@@ -76,18 +93,71 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
     });
   }
 
+  Future<void> deleteGroup() async {
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    if(user != null) result = (await ContactsServices().deleteContactsToUser(user!.id));
+    if(result)showDialogGroupDeleteConfirm();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> addNewContact(int id) async {
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    if(user != null) result = (await ContactsServices().addContactsToUser(user!.id, id));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> startNewConversation() async {
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    //if(user != null) result = (await ContactsServices().deleteContactsToUser(user!.id));
+    //if(result)showDialogGroupDeleteConfirm();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> openGroupConversation() async {
+    setState(() {
+      isLoading = true;
+    });
+    bool result = false;
+    //if(user != null) result = (await ContactsServices().deleteContactsToUser(user!.id));
+    //if(result)showDialogGroupDeleteConfirm();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   void showContactPopupMenu() async {
     await showMenu(
       context: context,
       position: const RelativeRect.fromLTRB(100, 100, 100, 100),
       items: [
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'message',
-            child: Text('Commencer un discussion')
+            onTap: () {
+              startNewConversation();
+            },
+            child: const Text('Commencer un discussion')
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'deleteContact',
-            child: Text('Supprimer l\'ami')
+            onTap: () {
+              deleteContact();
+            },
+            child: const Text('Supprimer l\'ami')
         ),
       ],
       elevation: 8.0,
@@ -99,13 +169,19 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
       context: context,
       position: const RelativeRect.fromLTRB(100, 100, 100, 100),
       items: [
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'openGroup',
-            child: Text('Ouvrir la discussion')
+            onTap: () {
+              openGroupConversation();
+            },
+            child: const Text('Ouvrir la discussion')
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'deleteGroup',
-            child: Text('Supprimer le groupe')
+            onTap: () {
+              deleteGroup();
+            },
+            child: const Text('Supprimer le groupe')
         ),
       ],
       elevation: 8.0,
@@ -117,13 +193,19 @@ class _TopBarDrawerState extends State<TopBarDrawer> {
       context: context,
       position: const RelativeRect.fromLTRB(100, 100, 100, 100),
       items: [
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'addFriend',
-            child: Text('Ajouter en ami')
+            onTap: () {
+              //addNewContact();
+            },
+            child: const Text('Ajouter en ami')
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
             value: 'block',
-            child: Text('Bloquer la personne')
+            onTap: () {
+              print("block");
+            },
+            child: const Text('Bloquer la personne')
         ),
       ],
       elevation: 8.0,

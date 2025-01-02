@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tds2/models/group_model.dart';
 import 'package:tds2/models/user_model.dart';
-import 'package:tds2/screens/message_screen.dart';
+import 'package:tds2/screens/private_message_screen.dart';
 
 import '../screens/screens.dart';
 
@@ -23,7 +22,7 @@ class _ContactItemState extends State<ContactItem> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MessageScreen(receiver: widget.user)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PrivateMessageScreen(receiver: widget.user)));
       },
       child: Container(
         height: 70,

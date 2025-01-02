@@ -47,7 +47,7 @@ class ContactsServices {
     return null;
   }
 
-  Future<List<ContactModel>?> addContactsToUser(int userId) async {
+  Future<bool> addContactsToUser(int senderId, int receiverId) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/contacts');
@@ -56,19 +56,20 @@ class ContactsServices {
             "Content-Type": "application/json",
           },
           body: jsonEncode({
-            "userId": userId,
+            "senderId": senderId,
+            "receiverId": receiverId
           }));
       if (response.statusCode == 200) {
-        return contactModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
+        return true;
       }
     } on TimeoutException catch (e) {
       log(e.toString());
-      return null;
+      return false;
     }
     catch (e) {
       log(e.toString());
     }
-    return null;
+    return false;
   }
 
   Future<bool> deleteContactsToUser(int userId) async {

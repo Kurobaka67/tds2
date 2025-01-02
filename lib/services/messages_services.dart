@@ -34,11 +34,18 @@ class MessageService {
       return null;
   }
 
-  Future<List<MessageModel>?> getMessageByUser(int userId) async {
+  Future<List<MessageModel>?> getPrivateMessage(int senderId, int receiverId) async {
     try {
       var client = http.Client();
-      var uri = Uri.parse('${globals.url}/messages/$userId');
-      var response = await client.get(uri);
+      var uri = Uri.parse('${globals.url}/messages/private');
+      var response = await client.post(uri,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "senderId": senderId,
+            "receiverId": receiverId
+          }));
       if (response.statusCode == 200) {
         return messageModelFromJson(const Utf8Decoder().convert(response.bodyBytes));
       }
@@ -52,7 +59,7 @@ class MessageService {
     return null;
   }
 
-  Future<bool> createNewPrivateMessage(String content, int id) async {
+  Future<bool> createNewPrivateMessage(String content, int senderId, int receiverId) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/messages');
@@ -62,7 +69,8 @@ class MessageService {
           },
           body: jsonEncode({
             "content": content,
-            "userId": id,
+            "senderId": senderId,
+            "receiverId": receiverId
           }));
       if (response.statusCode == 200) {
         return true;

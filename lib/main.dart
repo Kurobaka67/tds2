@@ -11,8 +11,17 @@ import 'package:tds2/screens/screens.dart';
 
 import 'firebase_options.dart';
 
+ColorScheme lightTheme = ColorScheme.fromSeed(seedColor: Colors.blue,
+  primary: const Color(0xFF0056B3),
+  onPrimary: const Color(0xFFF8F9FA),
+  secondary: const Color(0xFF87CEEB),
+  onSecondary: const Color(0xFFF8F9FA),
+  surface: const Color(0xFFF8F9FA),
+  primaryFixed: const Color(0xFF4682B4),
+  onPrimaryFixed: const Color(0xFFFFFFE0)
+);
 
-ColorScheme theme = ColorScheme.fromSeed(seedColor: Colors.blue);
+ColorScheme DarkTheme = ColorScheme.fromSeed(seedColor: Colors.blue);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,7 +86,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TDS',
       theme: ThemeData(
-        colorScheme: theme,
+        colorScheme: lightTheme,
         useMaterial3: true,
       ),
       home: screen,

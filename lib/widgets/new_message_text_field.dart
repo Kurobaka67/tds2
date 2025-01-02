@@ -14,15 +14,17 @@ import '../models/group_role_model.dart';
 import '../screens/screens.dart';
 
 class NewMessageTextField extends StatefulWidget {
-  final GroupModel group;
+  final GroupModel? group;
   final UserModel? user;
+  final UserModel? receiver;
   final void Function(MessageModel) addMessage;
   final void Function() scrollDown;
   final FocusNode nodeText;
 
   const NewMessageTextField({
     super.key,
-    required this.group,
+    this.group,
+    this.receiver,
     required this.user,
     required this.addMessage,
     required this.scrollDown,
@@ -53,7 +55,13 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
         isLoading = true;
         newMessage = newMessageController.text;
       });
-      var result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group.id, roleItemSelected));
+      var result;
+      if(widget.group != null){
+        result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group!.id, roleItemSelected));
+      }
+      else{
+        result = (await MessageService().createNewPrivateMessage(newMessage, userId, widget.receiver!.id));
+      }
       setState(() {
         isLoading = false;
       });

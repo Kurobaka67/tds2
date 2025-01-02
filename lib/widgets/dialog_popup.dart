@@ -22,14 +22,13 @@ class _DialogPopUpState extends State<DialogPopUp> {
   Widget build(BuildContext context) {
 
     return AlertDialog(
-        title: const Text("Rejoindre un groupe"),
-        content: const Column(
+        title: Text(widget.title),
+        content: Column(
             children: [
               Align(
                   alignment: Alignment.topLeft,
-                  child: Text("Code du groupe : ")
+                  child: Text(widget.content)
               ),
-              TextField()
             ]
         ),
         actions: [

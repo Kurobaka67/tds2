@@ -12,6 +12,7 @@ class _TopBarMenuState extends State<TopBarMenu> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
 
     return SizedBox(
       height: 70,
@@ -22,39 +23,42 @@ class _TopBarMenuState extends State<TopBarMenu> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomeScreen()));
                 },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primaryFixed,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: const Icon(Icons.home)
+                child: Icon(Icons.home, color: theme.colorScheme.onPrimaryFixed)
             ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GroupScreen()));
                 },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primaryFixed,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: const Icon(Icons.people_alt),
+                child: Icon(Icons.people_alt, color: theme.colorScheme.onPrimaryFixed),
             ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ConversationScreen()));
                 },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primaryFixed,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: const Icon(Icons.message),
+                child: Icon(Icons.message, color: theme.colorScheme.onPrimaryFixed),
             ),
           ]
       ),
