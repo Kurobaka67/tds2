@@ -23,42 +23,42 @@ class _TopBarMenuState extends State<TopBarMenu> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomeScreen()));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primaryFixed,
+                  backgroundColor: theme.colorScheme.secondary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: Icon(Icons.home, color: theme.colorScheme.onPrimaryFixed)
+                child: Icon(Icons.home, color: theme.colorScheme.onSecondary)
             ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const GroupScreen()));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primaryFixed,
+                  backgroundColor: theme.colorScheme.secondary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: Icon(Icons.people_alt, color: theme.colorScheme.onPrimaryFixed),
+                child: Icon(Icons.people_alt, color: theme.colorScheme.onSecondary),
             ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ConversationScreen()));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primaryFixed,
+                  backgroundColor: theme.colorScheme.secondary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
                   elevation: 0,
                   fixedSize: Size(MediaQuery.of(context).size.width/3, 70),
                 ),
-                child: Icon(Icons.message, color: theme.colorScheme.onPrimaryFixed),
+                child: Icon(Icons.message, color: theme.colorScheme.onSecondary),
             ),
           ]
       ),

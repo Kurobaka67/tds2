@@ -215,4 +215,47 @@ class UsersService {
       return false;
     }
   }
+
+  Future<bool> enableNotif(int userId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/user/enable-notif/$userId');
+      var response = await client.put(uri);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else{
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> disableNotif(int userId) async {
+    try {
+      var client = http.Client();
+      var uri = Uri.parse('${globals.url}/user/disable-notif/$userId');
+      var response = await client.put(uri);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else{
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      log(e.toString());
+      return false;
+    }
+    catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
 }

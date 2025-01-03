@@ -29,10 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: const TopBarDrawer(title: ""),
-      body: const Column(
+      body: Column(
         children: [
-          TopBarMenu(),
-          Text("Home"),
+          const TopBarMenu(),
+          Text("Home", style: TextStyle(color: theme.colorScheme.onSurface),),
         ],
       ),
     );

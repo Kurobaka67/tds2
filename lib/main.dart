@@ -13,15 +13,23 @@ import 'firebase_options.dart';
 
 ColorScheme lightTheme = ColorScheme.fromSeed(seedColor: Colors.blue,
   primary: const Color(0xFF0056B3),
-  onPrimary: const Color(0xFFF8F9FA),
-  secondary: const Color(0xFF87CEEB),
-  onSecondary: const Color(0xFFF8F9FA),
-  surface: const Color(0xFFF8F9FA),
-  primaryFixed: const Color(0xFF4682B4),
-  onPrimaryFixed: const Color(0xFFFFFFE0)
+  onPrimary: const Color(0xFFECF0F1),
+  secondary: const Color(0xFF648DB5),
+  onSecondary: const Color(0xFFBDC3C7),
+  surface: const Color(0xFFE0F0FF),
+  primaryFixed: const Color(0xFFCDE3F7),
+  onPrimaryFixed: const Color(0xFF2C3E50)
 );
 
-ColorScheme DarkTheme = ColorScheme.fromSeed(seedColor: Colors.blue);
+ColorScheme darkTheme = ColorScheme.fromSeed(seedColor: Colors.blue,
+  primary: const Color(0xFF2C3E50),
+  onPrimary: const Color(0xFFE0E0E0),
+  secondary: const Color(0xFF2E3B4E),
+  onSecondary: const Color(0xFFC0C0C0),
+  surface: const Color(0xFF121212),
+  primaryFixed: const Color(0xFF2C2C2C),
+  onPrimaryFixed: const Color(0xFFF5F5F5)
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

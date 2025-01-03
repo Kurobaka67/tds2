@@ -56,7 +56,7 @@ class _MessageItemState extends State<MessageItem> {
                       bottomRight: Radius.circular(20)
                     ),
                 ),
-                color: theme.colorScheme.secondary,
+                color: theme.colorScheme.primaryFixed,
                 child: SizedBox(
                   width: 300,
                   child: Padding(
@@ -67,7 +67,7 @@ class _MessageItemState extends State<MessageItem> {
                           alignment: Alignment.topLeft,
                           child: Text(widget.message.content, style: TextStyle(
                               fontSize: 18,
-                              color: theme.colorScheme.onSecondary
+                              color: theme.colorScheme.onPrimaryFixed
                             ),
                           ),
                         ),
