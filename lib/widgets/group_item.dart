@@ -32,7 +32,6 @@ class _GroupItemState extends State<GroupItem> {
           decoration: BoxDecoration(
             color: theme.colorScheme.primaryFixed,
             borderRadius: const BorderRadius.all(Radius.circular(30)),
-
           ),
           padding: const EdgeInsets.symmetric(
               horizontal: 15,

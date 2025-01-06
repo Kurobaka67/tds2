@@ -8,6 +8,7 @@ import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
 
 import 'home_screen.dart';
+import 'package:tds2/my_globals.dart' as globals;
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -144,6 +145,16 @@ class _SettingScreenState extends State<SettingScreen> {
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
+                                if(newValue == "Clair"){
+                                  setState(() {
+                                    globals.themeMode = ThemeMode.light;
+                                  });
+                                }
+                                else if(newValue == "Sombre"){
+                                  setState(() {
+                                    globals.themeMode = ThemeMode.dark;
+                                  });
+                                }
                                 setState(() {
                                   themeSelected = newValue!;
                                 });

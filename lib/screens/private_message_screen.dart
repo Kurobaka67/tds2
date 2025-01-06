@@ -37,8 +37,8 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
       isLoading = true;
     });
     final String email = await prefs?.getString('email') ?? '';
-    List<UserModel>? result;
-    if(user != null )result = (await UsersService().getUserByEmail(email));
+    List<UserModel>? result = (await UsersService().getUserByEmail(email));
+
     if(result != null){
       setState(() {
         user = result![0];
@@ -47,6 +47,8 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
     setState(() {
       isLoading = true;
     });
+
+    initMessage();
   }
 
   Future<void> initMessage() async {
@@ -55,8 +57,11 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
     });
     List<MessageModel>? result;
     if(user != null )result = (await MessageService().getPrivateMessage(user!.id, widget.receiver.id));
+    print(result);
+
     if(result != null){
       setState(() {
+        print(result);
         messages = result!;
       });
     }
@@ -76,7 +81,6 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
   }
 
   void callback(MessageModel message) {
-    print('hey');
     setState(() {
       messages.add(message);
     });
@@ -89,11 +93,6 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
   @override
   void initState() {
     super.initState();
-    messages = [
-      MessageModel(user: widget.receiver, content: "Bonjour", date: DateTime.now()),
-      MessageModel(user: user, content: "Salut", date: DateTime.now()),
-      MessageModel(user: widget.receiver, content: "Ca va ?", date: DateTime.now())
-    ];
     initUser();
     initFirebase();
   }

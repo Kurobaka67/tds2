@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/screens/screens.dart';
 
 import 'firebase_options.dart';
+import 'package:tds2/my_globals.dart' as globals;
 
 ColorScheme lightTheme = ColorScheme.fromSeed(seedColor: Colors.blue,
   primary: const Color(0xFF0056B3),
@@ -97,6 +98,11 @@ class MyApp extends StatelessWidget {
         colorScheme: lightTheme,
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: darkTheme,
+        useMaterial3: true,
+      ),
+      themeMode: globals.themeMode,
       home: screen,
     );
   }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -9,6 +12,8 @@ import 'package:tds2/models/user_model.dart';
 import 'package:tds2/services/messages_services.dart';
 import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
+
+import '../models/group_role_model.dart';
 
 class GroupMessageScreen extends StatefulWidget {
   final GroupModel group;
@@ -32,7 +37,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   UserModel? user;
   List<MessageModel> messages = [];
   List<MessageModel> messages2 = [];
-  TextEditingController newMessageController = TextEditingController();
+  List<File> filesImport = [];
+  var newMessageController = TextEditingController();
   ScrollController scrollController = ScrollController();
   String newMessage = "";
 
@@ -101,18 +107,52 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     initFirebase();
   }
 
+  int roleItemSelected = 2;
+  List<GroupRoleModel> roleItems = [
+    GroupRoleModel(text: "Amis", value: 2),
+    GroupRoleModel(text: "Amis proche", value: 1),
+  ];
+
+  Future<void> sendMessage() async {
+    if(newMessageController.text.isNotEmpty && user != null) {
+      setState(() {
+        isLoading = true;
+        newMessage = newMessageController.text;
+      });
+      var result = (await MessageService().createNewGroupMessage(newMessage, user!.id, widget.group!.id, roleItemSelected));
+      setState(() {
+        isLoading = false;
+      });
+      if(result){
+        newMessageController.clear();
+        callback(MessageModel(content: newMessage, date: DateTime.now(), user: user));
+        scrollDown();
+      }
+    }
+  }
+
+  Future<void> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['png', 'jpg', 'pdf', 'doc'],
+    );
+
+    if (result != null) {
+      List<File> files = result.paths.map((path) => File(path!)).toList();
+      files.forEach((element) => filesImport.add(element));
+      //print(filesImport);
+    } else {
+      print("No file selected");
+    }
+  }
+
   final FocusNode _nodeText1 = FocusNode();
-  final FocusNode _nodeText2 = FocusNode();
-  final FocusNode _nodeText3 = FocusNode();
-  final FocusNode _nodeText4 = FocusNode();
-  final FocusNode _nodeText5 = FocusNode();
-  final FocusNode _nodeText6 = FocusNode();
 
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-      keyboardBarColor: Colors.grey[200],
-      nextFocus: false,
+      keyboardBarColor: Colors.grey,
       actions: [
         KeyboardActionsItem(
           focusNode: _nodeText1,
@@ -170,7 +210,88 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                   ],
                 ),
               ),
-              NewMessageTextField(group: widget.group, addMessage: callback, user: user, scrollDown: scrollDown, nodeText: _nodeText1)
+              SizedBox(
+                height: 120,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(),
+                            const Spacer(),
+                            DropdownButton(
+                              value: roleItemSelected,
+                              items: roleItems.map((GroupRoleModel items) {
+                                return DropdownMenuItem(
+                                  value: items.value,
+                                  child: Text(items.text),
+                                );
+                              }).toList(),
+                              onChanged: (int? newValue) {
+                                setState(() {
+                                  roleItemSelected = newValue!;
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 50,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                                    elevation: 0,
+                                    backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
+                                  ),
+                                  onPressed: () {
+                                    pickFile();
+                                    //widget.scrollDown();
+                                  },
+                                  child: const Icon(Icons.attach_file)
+                              ),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: 250,
+                              child: TextField(
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _nodeText1,
+                                controller: newMessageController,
+                                decoration: InputDecoration(
+                                    fillColor: theme.colorScheme.primary.withOpacity(0.4),
+                                    filled: true,
+                                    border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(16))
+                                    )
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: 50,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                                    elevation: 0,
+                                    backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
+                                  ),
+                                  onPressed: () {
+                                    sendMessage();
+                                  },
+                                  child: const Icon(Icons.send)
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    )
+                ),
+              )
             ],
           ),
         ),

@@ -19,27 +19,32 @@ class ContactItem extends StatefulWidget {
 class _ContactItemState extends State<ContactItem> {
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
 
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => PrivateMessageScreen(receiver: widget.user)));
       },
-      child: Container(
-        height: 70,
-        width: 100,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 5
-        ),
-        child: Center(
-            child: Row(
-              children: [
-                Text(widget.user.firstname)
-              ],
-            )
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Container(
+          height: 70,
+          width: 100,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryFixed,
+            borderRadius: const BorderRadius.all(Radius.circular(30)),
+          ),
+          padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 5
+          ),
+          child: Center(
+              child: Row(
+                children: [
+                  Text(widget.user.firstname)
+                ],
+              )
+          ),
         ),
       ),
     );

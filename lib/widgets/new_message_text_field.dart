@@ -141,7 +141,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 0),
                           elevation: 0,
-                          backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                          backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
                         ),
                         onPressed: () {
                           pickFile();
@@ -158,7 +158,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                       focusNode: widget.nodeText,
                       controller: newMessageController,
                       decoration: InputDecoration(
-                          fillColor: theme.colorScheme.primary.withOpacity(0.3),
+                          fillColor: theme.colorScheme.primary.withOpacity(0.4),
                           filled: true,
                           border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(16))
@@ -173,7 +173,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 0),
                           elevation: 0,
-                          backgroundColor: theme.colorScheme.primary.withOpacity(0.3),
+                          backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
                         ),
                         onPressed: () {
                           sendMessage();

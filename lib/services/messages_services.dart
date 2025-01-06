@@ -38,6 +38,7 @@ class MessageService {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/messages/private');
+      print('ok');
       var response = await client.post(uri,
           headers: {
             "Content-Type": "application/json",
