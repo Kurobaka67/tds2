@@ -19,7 +19,6 @@ class NewMessageTextField extends StatefulWidget {
   final UserModel? receiver;
   final void Function(MessageModel) addMessage;
   final void Function() scrollDown;
-  final FocusNode nodeText;
 
   const NewMessageTextField({
     super.key,
@@ -28,7 +27,6 @@ class NewMessageTextField extends StatefulWidget {
     required this.user,
     required this.addMessage,
     required this.scrollDown,
-    required this.nodeText
   });
 
   @override
@@ -154,8 +152,34 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                   SizedBox(
                     width: 250,
                     child: TextField(
+                      onTap: () {
+                        showBottomSheet(
+                            context: context,
+                            builder: (context) => SizedBox(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Container(),
+                                  const Spacer(),
+                                  DropdownButton(
+                                    value: roleItemSelected,
+                                    items: roleItems.map((GroupRoleModel items) {
+                                      return DropdownMenuItem(
+                                        value: items.value,
+                                        child: Text(items.text),
+                                      );
+                                    }).toList(),
+                                    onChanged: (int? newValue) {
+                                      setState(() {
+                                        roleItemSelected = newValue!;
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                            ));
+                      },
                       keyboardType: TextInputType.text,
-                      focusNode: widget.nodeText,
                       controller: newMessageController,
                       decoration: InputDecoration(
                           fillColor: theme.colorScheme.primary.withOpacity(0.4),

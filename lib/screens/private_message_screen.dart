@@ -231,7 +231,7 @@ class _PrivateMessageScreenState extends State<PrivateMessageScreen> {
                   ],
                 ),
               ),
-              NewMessageTextField(receiver: widget.receiver, addMessage: callback, user: user, scrollDown: scrollDown, nodeText: _nodeText1)
+              NewMessageTextField(receiver: widget.receiver, addMessage: callback, user: user, scrollDown: scrollDown)
             ],
           ),
         ),

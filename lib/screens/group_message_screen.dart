@@ -192,9 +192,11 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
         ],
       ),
       drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
-      body: KeyboardActions(
-        config: _buildConfig(context),
-        tapOutsideBehavior: TapOutsideBehavior.translucentDismiss,
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+          FocusScope.of(context).unfocus();
+        },
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -210,88 +212,7 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 120,
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(),
-                            const Spacer(),
-                            DropdownButton(
-                              value: roleItemSelected,
-                              items: roleItems.map((GroupRoleModel items) {
-                                return DropdownMenuItem(
-                                  value: items.value,
-                                  child: Text(items.text),
-                                );
-                              }).toList(),
-                              onChanged: (int? newValue) {
-                                setState(() {
-                                  roleItemSelected = newValue!;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 50,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                                    elevation: 0,
-                                    backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
-                                  ),
-                                  onPressed: () {
-                                    pickFile();
-                                    //widget.scrollDown();
-                                  },
-                                  child: const Icon(Icons.attach_file)
-                              ),
-                            ),
-                            const Spacer(),
-                            SizedBox(
-                              width: 250,
-                              child: TextField(
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                                focusNode: _nodeText1,
-                                controller: newMessageController,
-                                decoration: InputDecoration(
-                                    fillColor: theme.colorScheme.primary.withOpacity(0.4),
-                                    filled: true,
-                                    border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(16))
-                                    )
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            SizedBox(
-                              width: 50,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                                    elevation: 0,
-                                    backgroundColor: theme.colorScheme.secondary.withOpacity(0.6),
-                                  ),
-                                  onPressed: () {
-                                    sendMessage();
-                                  },
-                                  child: const Icon(Icons.send)
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    )
-                ),
-              )
+              NewMessageTextField(user: user, addMessage: callback, scrollDown: scrollDown)
             ],
           ),
         ),
