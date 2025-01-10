@@ -175,6 +175,7 @@ class UsersService {
       var response = await client.put(uri,
           headers: {
             "Content-Type": "application/json",
+            
           },
           body: jsonEncode({
             "role": role,

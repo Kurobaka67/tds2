@@ -16,7 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: theme.colorScheme.onPrimary),
-        title: Center(child: Text('Accueil', style: TextStyle(color: theme.colorScheme.onPrimary),)),
+        title: Center(
+            child: Text(
+          'Accueil',
+          style: TextStyle(color: theme.colorScheme.onPrimary),
+        )),
         backgroundColor: theme.colorScheme.primary,
         actions: const [
           Padding(
@@ -32,7 +36,29 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           const TopBarMenu(),
-          Text("Home", style: TextStyle(color: theme.colorScheme.onSurface),),
+          SizedBox(
+            height: 300,
+            child: ListView(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Jonathan'),
+                  subtitle: Text('Dernier message: Bonjour, comment allez-vous?'),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Jo'),
+                  subtitle: Text('Dernier message: Merci pour votre réponse.'),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Icon(Icons.add),
+          ),
         ],
       ),
     );
