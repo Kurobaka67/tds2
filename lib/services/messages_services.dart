@@ -86,7 +86,7 @@ class MessageService {
     return false;
   }
 
-  Future<bool> createNewGroupMessage(String content, int id, int groupId, int roleGroup) async {
+  Future<bool> createNewGroupMessage(String content, int id, int groupId, int roleGroup, String? file) async {
     try {
       var client = http.Client();
       var uri = Uri.parse('${globals.url}/message/group');
@@ -98,6 +98,7 @@ class MessageService {
             "content": content,
             "userId": id,
             "groupId": groupId,
+            "file": file
           }));
       if (response.statusCode == 200) {
         return true;

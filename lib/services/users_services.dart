@@ -50,7 +50,7 @@ class UsersService {
           body: jsonEncode({
             "email": email,
           }));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
         return true;
       }
       else{

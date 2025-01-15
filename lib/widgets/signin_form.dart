@@ -75,9 +75,10 @@ class _SigninFormState extends State<SigninForm> {
       child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: TextFormField(
                 focusNode: myFocusNode,
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -130,8 +131,9 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -184,8 +186,9 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -238,8 +241,9 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -291,8 +295,9 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: TextFormField(
+                textInputAction: TextInputAction.done,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -343,7 +348,7 @@ class _SigninFormState extends State<SigninForm> {
                 ),
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             Row(
               children: [
                 const Spacer(),

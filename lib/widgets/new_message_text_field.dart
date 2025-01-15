@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -12,6 +13,7 @@ import 'package:tds2/services/messages_services.dart';
 
 import '../models/group_role_model.dart';
 import '../screens/screens.dart';
+import 'package:tds2/my_globals.dart' as globals;
 
 class NewMessageTextField extends StatefulWidget {
   final GroupModel? group;
@@ -36,7 +38,8 @@ class NewMessageTextField extends StatefulWidget {
 class _NewMessageTextFieldState extends State<NewMessageTextField> {
   SharedPreferencesAsync? prefs = SharedPreferencesAsync();
   TextEditingController newMessageController = TextEditingController();
-  List<File> filesImport = [];
+  File? fileImportSelected;
+  String? fileBase64String;
   bool isLoading = false;
   String newMessage = "";
   int userId = -1;
@@ -55,7 +58,12 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
       });
       var result;
       if(widget.group != null){
-        result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group!.id, roleItemSelected));
+        if(fileBase64String != null){
+          result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group!.id, roleItemSelected, fileBase64String));
+        }
+        else{
+          result = (await MessageService().createNewGroupMessage(newMessage, userId, widget.group!.id, roleItemSelected, null));
+        }
       }
       else{
         result = (await MessageService().createNewPrivateMessage(newMessage, userId, widget.receiver!.id));
@@ -73,14 +81,20 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
 
   Future<void> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
+      allowMultiple: false,
       type: FileType.custom,
       allowedExtensions: ['png', 'jpg', 'pdf', 'doc'],
     );
 
     if (result != null) {
       List<File> files = result.paths.map((path) => File(path!)).toList();
-      files.forEach((element) => filesImport.add(element));
+      setState(() {
+        fileImportSelected = files[0];
+      });
+      var _bytes = (await fileImportSelected?.readAsBytes());
+      setState(() {
+        fileBase64String = base64.encode(_bytes as List<int>);
+      });
       //print(filesImport);
     } else {
       print("No file selected");
@@ -113,7 +127,19 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
             children: [
               Row(
                 children: [
-                  Container(),
+                  if(fileImportSelected != null)
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.black.withOpacity(0.5))
+                      ),
+                      child: const Align(
+                          alignment: Alignment.center,
+                          child: Icon(Icons.insert_drive_file)
+                      ),
+                    ),
                   const Spacer(),
                   DropdownButton(
                     value: roleItemSelected,
@@ -153,6 +179,7 @@ class _NewMessageTextFieldState extends State<NewMessageTextField> {
                     width: 250,
                     child: TextField(
                       onTap: () {
+                        globals.isBottomSheetShow = true;
                         showBottomSheet(
                             context: context,
                             builder: (context) => SizedBox(

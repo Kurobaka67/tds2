@@ -35,84 +35,89 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                      height: 100,
-                      width: 250,
-                      child:
-                      Image.asset('assets/images/logoTDS.png', fit: BoxFit.cover),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Text(
-                      'Bienvenue !',
-                      style: TextStyle(
-                          color: theme.colorScheme.onPrimaryFixed,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 120,
-                    ),
-                    const Center(
-                        child: LoginForm()
-                    ),
-                    const SizedBox(height: 20),
-                    Stack(
-                      children: [
-                        Divider(
-                          endIndent: 30,
-                          indent: 30,
-                          thickness: 2,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                        Center(
-                            child: Container(
-                                width: 40,
-                                decoration: const BoxDecoration(
-                                    color: Color(0xFFD1E4FF)
+      GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+              child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 100,
+                        width: 250,
+                        child:
+                        Image.asset('assets/images/logoTDS.png', fit: BoxFit.cover),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Text(
+                        'Bienvenue !',
+                        style: TextStyle(
+                            color: theme.colorScheme.onPrimaryFixed,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 120,
+                      ),
+                      const Center(
+                          child: LoginForm()
+                      ),
+                      const SizedBox(height: 10),
+                      Stack(
+                        children: [
+                          Divider(
+                            endIndent: 50,
+                            indent: 50,
+                            thickness: 2,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          Center(
+                              child: Container(
+                                  width: 40,
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xFFD1E4FF)
+                                  ),
+                                  child: const Center(child: Text('OU', style: TextStyle(fontSize: 18)))
+                              )
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      ElevatedButton(
+                          onPressed: () {
+                              _navigateToSigninScreen(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.secondary,
+                            fixedSize: Size(240, 50),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Créer un compte',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSecondary,
+                                  fontSize: 25,
                                 ),
-                                child: const Center(child: Text('OU', style: TextStyle(fontSize: 18)))
-                            )
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                        onPressed: () {
-                            _navigateToSigninScreen(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.secondary,
-                          fixedSize: Size(240, 50),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Créer un compte',
-                              style: TextStyle(
-                                color: theme.colorScheme.onSecondary,
-                                fontSize: 25,
                               ),
-                            ),
-                          ],
-                        )
-                    ),
-                  ],
-                )),
-          ))
+                            ],
+                          )
+                      ),
+                    ],
+                  )),
+            )),
+      )
     ]);
   }
 

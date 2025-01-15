@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tds2/models/user_model.dart';
 import '../screens/screens.dart';
@@ -35,12 +36,14 @@ class _LoginFormState extends State<LoginForm> {
       isLoading = true;
       email = emailController.text.toLowerCase();
       password = passwordController.text;
-      isLoading = false;
     });
     List<UserModel>? result = (await UsersService().login(email, password));
 
     emailController.clear();
     passwordController.clear();
+    setState(() {
+      isLoading = false;
+    });
     if(result != null) {
       await prefs?.setInt('id', result[0].id);
       await prefs?.setString('email', result[0].email);
@@ -67,9 +70,10 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
               child: TextFormField(
                 focusNode: myFocusNode,
+                textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -122,8 +126,9 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
               child: TextFormField(
+                textInputAction: TextInputAction.done,
                 onEditingComplete: () {
                   SystemChrome.restoreSystemUIOverlays();
                 },
@@ -174,7 +179,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
                   if (loginFormKey.currentState!.validate()) {
@@ -184,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.secondary,
-                  fixedSize: Size(isLoading?210:175, 50),
+                  fixedSize: Size(isLoading?200:175, 50),
                 ),
                 child: Row(
                   children: [
@@ -195,6 +200,11 @@ class _LoginFormState extends State<LoginForm> {
                         fontSize: 25,
                       ),
                     ),
+                    if(isLoading)
+                      LoadingAnimationWidget.fourRotatingDots(
+                        size: 30,
+                        color: Colors.black45,
+                      ),
                   ],
                 )
             ),

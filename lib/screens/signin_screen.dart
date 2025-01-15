@@ -38,30 +38,35 @@ class _SigninScreenState extends State<SigninScreen> {
       Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Text(
-                      'Créer un compte !',
-                      style: TextStyle(
-                          color: theme.colorScheme.onPrimaryFixed,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 140,
-                    ),
-                    const Center(
-                        child: SigninForm()
-                    )
-                  ],
-                )),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+              child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Text(
+                        'Créer un compte !',
+                        style: TextStyle(
+                            color: theme.colorScheme.onPrimaryFixed,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 140,
+                      ),
+                      const Center(
+                          child: SigninForm()
+                      )
+                    ],
+                  )),
+            ),
           ))
     ]);
   }

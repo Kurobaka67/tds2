@@ -14,6 +14,7 @@ import 'package:tds2/services/users_services.dart';
 import 'package:tds2/widgets/widgets.dart';
 
 import '../models/group_role_model.dart';
+import 'package:tds2/my_globals.dart' as globals;
 
 class GroupMessageScreen extends StatefulWidget {
   final GroupModel group;
@@ -37,7 +38,6 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   UserModel? user;
   List<MessageModel> messages = [];
   List<MessageModel> messages2 = [];
-  List<File> filesImport = [];
   var newMessageController = TextEditingController();
   ScrollController scrollController = ScrollController();
   String newMessage = "";
@@ -85,7 +85,6 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
   }
 
   void callback(MessageModel message) {
-    print('hey');
     setState(() {
       messages2.add(message);
     });
@@ -112,40 +111,6 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
     GroupRoleModel(text: "Amis", value: 2),
     GroupRoleModel(text: "Amis proche", value: 1),
   ];
-
-  Future<void> sendMessage() async {
-    if(newMessageController.text.isNotEmpty && user != null) {
-      setState(() {
-        isLoading = true;
-        newMessage = newMessageController.text;
-      });
-      var result = (await MessageService().createNewGroupMessage(newMessage, user!.id, widget.group!.id, roleItemSelected));
-      setState(() {
-        isLoading = false;
-      });
-      if(result){
-        newMessageController.clear();
-        callback(MessageModel(content: newMessage, date: DateTime.now(), user: user));
-        scrollDown();
-      }
-    }
-  }
-
-  Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['png', 'jpg', 'pdf', 'doc'],
-    );
-
-    if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      files.forEach((element) => filesImport.add(element));
-      //print(filesImport);
-    } else {
-      print("No file selected");
-    }
-  }
 
   final FocusNode _nodeText1 = FocusNode();
 
@@ -194,7 +159,8 @@ class _GroupMessageScreenState extends State<GroupMessageScreen> {
       drawer: TopBarDrawer(title: "Utilisateurs du groupe", users: users2),
       body: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          if(globals.isBottomSheetShow)Navigator.pop(context);
+          globals.isBottomSheetShow = false;
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
